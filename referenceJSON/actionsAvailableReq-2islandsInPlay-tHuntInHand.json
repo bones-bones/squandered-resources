@@ -1,0 +1,177 @@
+{
+    "type": "GREMessageType_ActionsAvailableReq",
+    "systemSeatIds": [
+        1
+    ],
+    "msgId": 167,
+    "gameStateId": 118,
+    "prompt": {
+        "promptId": 2
+    },
+    "actionsAvailableReq": {
+        "actions": [
+            {
+                "actionType": "ActionType_Cast",
+                "grpId": 35611,
+                "instanceId": 313,
+                "manaCost": [
+                    {
+                        "color": [
+                            "ManaColor_Generic"
+                        ],
+                        "count": 1
+                    },
+                    {
+                        "color": [
+                            "ManaColor_Blue"
+                        ],
+                        "count": 1
+                    }
+                ],
+                "shouldStop": true,
+                "autoTapSolution": {
+                    "autoTapActions": [
+                        {
+                            "instanceId": 283,
+                            "abilityGrpId": 1002,
+                            "manaPaymentOption": {
+                                "mana": [
+                                    {
+                                        "manaId": 149,
+                                        "color": "ManaColor_Blue",
+                                        "srcInstanceId": 283,
+                                        "specs": [
+                                            {
+                                                "type": "ManaSpecType_Predictive"
+                                            }
+                                        ],
+                                        "abilityGrpId": 1002
+                                    }
+                                ]
+                            },
+                            "costCategory": "CostCategory_Automatic"
+                        },
+                        {
+                            "instanceId": 290,
+                            "abilityGrpId": 1002,
+                            "manaPaymentOption": {
+                                "mana": [
+                                    {
+                                        "manaId": 148,
+                                        "color": "ManaColor_Blue",
+                                        "srcInstanceId": 290,
+                                        "specs": [
+                                            {
+                                                "type": "ManaSpecType_Predictive"
+                                            }
+                                        ],
+                                        "abilityGrpId": 1002
+                                    }
+                                ]
+                            },
+                            "costCategory": "CostCategory_Automatic"
+                        }
+                    ]
+                }
+            },
+            {
+                "actionType": "ActionType_Play",
+                "grpId": 7065,
+                "instanceId": 161,
+                "shouldStop": true
+            },
+            {
+                "actionType": "ActionType_Play",
+                "grpId": 7065,
+                "instanceId": 163,
+                "shouldStop": true
+            },
+            {
+                "actionType": "ActionType_Play",
+                "grpId": 7065,
+                "instanceId": 164,
+                "shouldStop": true
+            },
+            {
+                "actionType": "ActionType_Play",
+                "grpId": 7065,
+                "instanceId": 165,
+                "shouldStop": true
+            },
+            {
+                "actionType": "ActionType_Play",
+                "grpId": 7065,
+                "instanceId": 282,
+                "shouldStop": true
+            },
+            {
+                "actionType": "ActionType_Play",
+                "grpId": 7065,
+                "instanceId": 289,
+                "shouldStop": true
+            },
+            {
+                "actionType": "ActionType_Play",
+                "grpId": 70394,
+                "instanceId": 360,
+                "shouldStop": true
+            },
+            {
+                "actionType": "ActionType_Activate_Mana",
+                "grpId": 7065,
+                "instanceId": 283,
+                "abilityGrpId": 1002,
+                "manaPaymentOptions": [
+                    {
+                        "mana": [
+                            {
+                                "manaId": 149,
+                                "color": "ManaColor_Blue",
+                                "srcInstanceId": 283,
+                                "specs": [
+                                    {
+                                        "type": "ManaSpecType_Predictive"
+                                    }
+                                ],
+                                "abilityGrpId": 1002
+                            }
+                        ]
+                    }
+                ],
+                "maxActivations": 1,
+                "isBatchable": true
+            },
+            {
+                "actionType": "ActionType_Activate_Mana",
+                "grpId": 7065,
+                "instanceId": 290,
+                "abilityGrpId": 1002,
+                "manaPaymentOptions": [
+                    {
+                        "mana": [
+                            {
+                                "manaId": 148,
+                                "color": "ManaColor_Blue",
+                                "srcInstanceId": 290,
+                                "specs": [
+                                    {
+                                        "type": "ManaSpecType_Predictive"
+                                    }
+                                ],
+                                "abilityGrpId": 1002
+                            }
+                        ]
+                    }
+                ],
+                "maxActivations": 1,
+                "isBatchable": true
+            },
+            {
+                "actionType": "ActionType_Pass"
+            },
+            {
+                "actionType": "ActionType_FloatMana"
+            }
+        ]
+    }
+}
