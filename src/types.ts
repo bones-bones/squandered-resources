@@ -49,6 +49,16 @@ export interface FloatMana extends Action {
     actionType: ActionType.ActionType_FloatMana
 }
 
+export interface ActivateMana extends Action {
+    actionType: ActionType.ActionType_Activate_Mana
+    grpId: number
+    instanceId: number
+    abilityGrpId: number
+    manaPaymentOptions: ManaPaymentOption[]
+    maxActivations: number
+    isBatchable: boolean
+}
+
 //I think playaction is mostly just for lands
 export interface PlayAction extends Action {
     actionType: ActionType.ActionType_Play
@@ -81,10 +91,12 @@ enum Mana_Color {
 interface AutoTapAction {
     instanceId: number // iid of mana source
     abilityGrpId: number // the 100xs are basic land tapping
-    manaPaymentOption: { mana: Mana[] }
+    manaPaymentOption: ManaPaymentOption
     costCategory: 'CostCategory_Automatic'
 }
-
+interface ManaPaymentOption {
+    mana: Mana[]
+}
 interface Mana {
     manaId: number//this is probably an enum
     color: Mana_Color,
