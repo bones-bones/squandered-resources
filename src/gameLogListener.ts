@@ -1,9 +1,10 @@
 import fs from 'fs';
-import { treasureHunt } from './constants/treasureHunt';
-import { doIMulligan, getActiveGameState, getActivePlayerId, getGameObjects, getPlayerHand } from './stubsOfCode/functions';
+import { subHumanMonoGreen } from './constants/subHumanMonoGreen';
+import { getActiveGameStates, getActivePlayerId, getGameObjects, getPlayerHand } from './stubsOfCode/functions';
 
 export let gameObjects: { [key: string]: any } = {};
 let userPlayerId: number;
+let trackedHand = [];
 
 
 export const constructLogEventHandler = (activeLogFile: string) => {
@@ -17,7 +18,7 @@ export const constructLogEventHandler = (activeLogFile: string) => {
                 start: currentIndex
             }).on('data', (data) => {
                 readData += data;
-                console.log(data.length, 'is data')
+                console.log(data.length, 'bytes? of data')
             }).on('error', (err) => {
                 console.error(err)
             }).on("end", () => { resolve(readData); })
@@ -33,6 +34,9 @@ export const constructLogEventHandler = (activeLogFile: string) => {
             const ingestedLogs = (newValue.split('\n'));
             const entriesThatICareAbout = ingestedLogs.filter(entry => entry[0] == '{' && entry[entry.length - 1] == '}')
             //console.log(entriesThatICareAbout);
+            if (!entriesThatICareAbout || entriesThatICareAbout.length == 0) {
+                console.log('NEW LOGS', ingestedLogs)
+            }
             for (let i = 0; i < entriesThatICareAbout.length; i++) {
                 const ohJson = JSON.parse(entriesThatICareAbout[i]);
 
@@ -42,29 +46,37 @@ export const constructLogEventHandler = (activeLogFile: string) => {
                     console.log('Authed');
                 } else if (ohJson.matchGameRoomStateChangedEvent) {
                     console.log('game room change event');
+                } else if (ohJson.greToClientEvent) {
+                    console.log('Generic Client Event Time', ohJson.greToClientEvent.greToClientMessages);
+
+                    for (let l = 0; l < ohJson.greToClientEvent.greToClientMessages.length; l++) {
+                        if (ohJson.greToClientEvent.greToClientMessages[l].type == 'GREMessageType_ConnectResp') {
+                            // we probably don't care about this
+                            console.log('connected');
+                        } else {
+                            const states = getActiveGameStates(ohJson);
+                            if (!userPlayerId) {
+                                userPlayerId = getActivePlayerId(states[0]);
+                                console.log(`you are player: ${userPlayerId}`);
+                            }
+                            if (states) {
+                                for (let k = 0; k < states.length; k++) {
+                                    const gameObs = (getGameObjects(states[k]))
+                                    gameObs.forEach((element: { instanceId: number }) => {
+                                        gameObjects[`${element.instanceId}`] = element;
+                                    });
+                                    // console.log('known game objects', gameObjects)
+
+
+                                }
+                            }
+                            console.log(getPlayerHand(userPlayerId, ohJson.greToClientEvent.greToClientMessages[l]))
+                        }
+                    }
                 } else {
-                    console.log('entryJSON', ohJson)
-                    const state = getActiveGameState(ohJson);
-                    if (!userPlayerId) {
-                        userPlayerId = getActivePlayerId(state);
-                        console.log(`you are player: ${userPlayerId}`);
-                    }
-                    if (state) {
-                        const gameObs = (getGameObjects(state))
-                        console.log(gameObs)
-                        gameObs.forEach((element: { instanceId: number }) => {
-                            gameObjects[`${element.instanceId}`] = element;
-                        });
-                        console.log('known game objects', gameObjects)
-
-                        const hand = getPlayerHand(userPlayerId, state);
-                        console.log(`your hand: `, hand?.map((entry: number) => treasureHunt[`${entry}`]));
-                        console.log(doIMulligan(hand) ? 'mully' : 'keeper');
-                    }
+                    console.log('this is new...', ohJson)
                 }
-
             }
-
         }
     }
 }
