@@ -1,4 +1,5 @@
 import fs from 'fs'
+import { constructLogEventHandler } from './gameLogListener';
 
 console.log('Server is up');
 
@@ -8,8 +9,9 @@ fs.promises.readdir('../../../Library/Application Support/com.wizards.mtga/Logs/
     const mostRecentLog = files.filter(fileName => fileName.includes('UTC_Log')).sort().pop();
     if (mostRecentLog) {
         console.log(`Reading from [${mostRecentLog}]`);
-        fs.watchFile(`../../../Library/Application Support/com.wizards.mtga/Logs/Logs/${mostRecentLog}`,
-            (fileChangeEvent) => { console.log('it moved', fileChangeEvent); })
+        const hackyFilePath = `../../../Library/Application Support/com.wizards.mtga/Logs/Logs/${mostRecentLog}`
+        // Need to check if mtg fires this twice
+        fs.watch(hackyFilePath, constructLogEventHandler(hackyFilePath))
     } else {
         console.error('Log path was correct but no log files were found there...')
     }
