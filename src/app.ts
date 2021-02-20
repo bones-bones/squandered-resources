@@ -11,7 +11,7 @@ fs.promises.readdir('../../../Library/Application Support/com.wizards.mtga/Logs/
         console.log(`Reading from [${mostRecentLog}]`);
         const hackyFilePath = `../../../Library/Application Support/com.wizards.mtga/Logs/Logs/${mostRecentLog}`
         // Need to check if mtg fires this twice
-        fs.watch(hackyFilePath, constructLogEventHandler(hackyFilePath))
+        fs.watchFile(hackyFilePath, constructLogEventHandler(hackyFilePath))
     } else {
         console.error('Log path was correct but no log files were found there...')
     }
