@@ -2,7 +2,7 @@ import fs from 'fs';
 import { treasureHunt } from './constants/treasureHunt';
 import { doIMulligan, getActiveGameState, getActivePlayerId, getGameObjects, getPlayerHand } from './stubsOfCode/functions';
 
-let gameObjects = {};
+export let gameObjects: { [key: string]: any } = {};
 let userPlayerId: number;
 
 
@@ -24,8 +24,6 @@ export const constructLogEventHandler = (activeLogFile: string) => {
         }));
         currentIndex += newValue.length;
 
-        console.log(newValue.length)
-
         if (newValue.includes('Event.MatchCreated')) {
             console.log("Match has been created!");
             gameObjects = {};
@@ -33,21 +31,37 @@ export const constructLogEventHandler = (activeLogFile: string) => {
         if (newValue.includes('GREMessageType_GameStateMessage')) {
             console.log("Game State Event!");
             const ingestedLogs = (newValue.split('\n'));
-            const entriesThatICareAbout = ingestedLogs.find(entry => entry[0] == '{' && entry[entry.length - 1] == '}')
+            const entriesThatICareAbout = ingestedLogs.filter(entry => entry[0] == '{' && entry[entry.length - 1] == '}')
             //console.log(entriesThatICareAbout);
-            if (entriesThatICareAbout) {
-                const ohJson = JSON.parse(entriesThatICareAbout);
-                const state = getActiveGameState(ohJson);
+            for (let i = 0; i < entriesThatICareAbout.length; i++) {
+                const ohJson = JSON.parse(entriesThatICareAbout[i]);
 
-                if (!userPlayerId) {
-                    userPlayerId = getActivePlayerId(state);
-                    console.log(`you are player: ${userPlayerId}`);
+                if (ohJson.error) {
+                    console.error(`Error Entry: `, ohJson.error.errorCode);
+                } else if (ohJson.authenticateResponse) {
+                    console.log('Authed');
+                } else if (ohJson.matchGameRoomStateChangedEvent) {
+                    console.log('game room change event');
+                } else {
+                    console.log('entryJSON', ohJson)
+                    const state = getActiveGameState(ohJson);
+                    if (!userPlayerId) {
+                        userPlayerId = getActivePlayerId(state);
+                        console.log(`you are player: ${userPlayerId}`);
+                    }
+                    if (state) {
+                        const gameObs = (getGameObjects(state))
+                        console.log(gameObs)
+                        gameObs.forEach((element: { instanceId: number }) => {
+                            gameObjects[`${element.instanceId}`] = element;
+                        });
+                        console.log('known game objects', gameObjects)
+
+                        const hand = getPlayerHand(userPlayerId, state);
+                        console.log(`your hand: `, hand?.map((entry: number) => treasureHunt[`${entry}`]));
+                        console.log(doIMulligan(hand) ? 'mully' : 'keeper');
+                    }
                 }
-                console.log(getGameObjects(state))
-
-                const hand = getPlayerHand(userPlayerId, state);
-                console.log(`your hand: `, hand.map((entry: number) => treasureHunt[`${entry}`]));
-                console.log(doIMulligan(hand) ? 'mully' : 'keeper');
 
             }
 
