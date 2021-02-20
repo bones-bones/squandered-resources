@@ -1,4 +1,3 @@
-import { DIG_FOR_TREASURE_NAME, THASSAS_ORACLE_NAME } from '../constants/treasureHunt'
 import { gameObjects } from '../gameLogListener';
 //greToClientEvent.greToClientMessages[].type==GREMessageType_MulliganReq
 

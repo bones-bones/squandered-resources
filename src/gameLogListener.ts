@@ -5,6 +5,7 @@ import { getActiveGameStates, getActivePlayerId, getGameObjects, getPlayerHand }
 export let gameObjects: { [key: string]: any } = {};
 let userPlayerId: number;
 let trackedHand = [];
+let availaibleActions = [];
 
 
 export const constructLogEventHandler = (activeLogFile: string) => {
@@ -47,30 +48,55 @@ export const constructLogEventHandler = (activeLogFile: string) => {
                 } else if (ohJson.matchGameRoomStateChangedEvent) {
                     console.log('game room change event');
                 } else if (ohJson.greToClientEvent) {
-                    console.log('Generic Client Event Time', ohJson.greToClientEvent.greToClientMessages);
+                    const clientMessages = ohJson.greToClientEvent.greToClientMessages;
 
-                    for (let l = 0; l < ohJson.greToClientEvent.greToClientMessages.length; l++) {
-                        if (ohJson.greToClientEvent.greToClientMessages[l].type == 'GREMessageType_ConnectResp') {
-                            // we probably don't care about this
-                            console.log('connected');
-                        } else {
-                            const states = getActiveGameStates(ohJson);
-                            if (!userPlayerId) {
-                                userPlayerId = getActivePlayerId(states[0]);
-                                console.log(`you are player: ${userPlayerId}`);
+                    console.log('Generic Client Event Time', clientMessages);
+
+
+                    for (let l = 0; l < clientMessages.length; l++) {
+
+                        switch (clientMessages[l].type) {
+                            case 'GREMessageType_ConnectResp': {
+                                console.log('Game Connected');
+                                break;
                             }
-                            if (states) {
-                                for (let k = 0; k < states.length; k++) {
-                                    const gameObs = (getGameObjects(states[k]))
-                                    gameObs.forEach((element: { instanceId: number }) => {
-                                        gameObjects[`${element.instanceId}`] = element;
-                                    });
-                                    // console.log('known game objects', gameObjects)
-
-
+                            case 'GREMessageType_ChooseStartingPlayerReq': {
+                                console.log('Starting player being determined');
+                                break;
+                            }
+                            case 'GREMessageType_ActionsAvailableReq': {
+                                console.log('Available actions...');
+                                availaibleActions = (clientMessages[l].actionsAvailableReq.actions);
+                                console.log('AA', JSON.stringify(availaibleActions));
+                                break;
+                            }
+                            case undefined: {
+                                console.log('game state with no type!', ohJson);
+                                break;
+                            }
+                            case 'GREMessageType_GameStateMessage': {
+                                // This seems to be the big one
+                            }
+                            default: {
+                                console.log('Default Case');
+                                const states = getActiveGameStates(ohJson);
+                                if (!userPlayerId) {
+                                    userPlayerId = getActivePlayerId(states[0]);
+                                    console.log(`you are player: ${userPlayerId}`);
                                 }
+                                if (states) {
+                                    for (let k = 0; k < states.length; k++) {
+                                        const gameObs = (getGameObjects(states[k]))
+                                        gameObs.forEach((element: { instanceId: number }) => {
+                                            gameObjects[`${element.instanceId}`] = element;
+                                        });
+                                        // console.log('known game objects', gameObjects)
+
+
+                                    }
+                                }
+                                console.log(getPlayerHand(userPlayerId, clientMessages[l]))
                             }
-                            console.log(getPlayerHand(userPlayerId, ohJson.greToClientEvent.greToClientMessages[l]))
                         }
                     }
                 } else {
@@ -81,3 +107,6 @@ export const constructLogEventHandler = (activeLogFile: string) => {
     }
 }
 // cool events
+
+
+
