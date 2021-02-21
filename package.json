@@ -7,7 +7,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "lint": "eslint . --ext .ts,.json",
+    "lint": "eslint . --ext .ts,.json --fix",
     "start": "ts-node src/app.ts"
   },
   "devDependencies": {

@@ -171,9 +171,11 @@ export const constructLogEventHandler = (activeLogFile: string) => {
               }
               case 'GREMessageType_SubmitAttackersResp': {
                 //TODO handle prompts
+                break;
               }
               case 'GREMessageType_GameStateMessage': {
                 // This seems to be the big one
+                break;
               }
 
               default: {
