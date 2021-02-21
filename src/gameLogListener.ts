@@ -1,7 +1,7 @@
 import fs from 'fs';
 import * as theActiveDeck from './constants/subHumanMonoGreen';
-import { getActiveGameStates, getActivePlayerId, getGameObjects, getPlayerHand } from './stubsOfCode/functions';
-import { Action, ActionType, CastAction, DeclareAttackersReqMessage, DeclareBlockersRequest, GameObject, PayCostPrompt } from './types';
+import { getActiveGameStates, getActivePlayerId, getGameObjects, getPlayerHand, sortInHand } from './stubsOfCode/functions';
+import { Action, ActionType, CastAction, DeclareAttackersReqMessage, DeclareBlockersRequest, GameObject, InstanceAction, Mana_Color, PayCostPrompt } from './types';
 import robot from 'robotjs';
 import { getArenaSizeAndPosition } from './stubsOfCode/macSystemInterface';
 import { clickKeep, clickMulligan } from './mouseInteractions';
@@ -12,6 +12,7 @@ export let gameObjects: { [key: string]: GameObject } = {};
 let userPlayerId: number;
 let trackedHand: number[] | undefined;
 let availaibleActions: Action[] = [];
+let handIsSorted = false;
 
 function getValidPlays() {
     const spellsToCast = availaibleActions.filter(action => {
@@ -131,6 +132,30 @@ export const constructLogEventHandler = (activeLogFile: string) => {
                             case 'GREMessageType_ActionsAvailableReq': {
                                 console.log('Getting available actions');
                                 availaibleActions = (clientMessages[l].actionsAvailableReq.actions);
+                                if (availaibleActions.length > 0) {
+                                    if (!handIsSorted && trackedHand) {
+                                        console.log('un sorted hand', trackedHand, 'aa', availaibleActions)
+
+                                        const availableActionsThatArePlayableOrCastable = (availaibleActions.filter(aa => {
+                                            return (aa as InstanceAction).instanceId !== undefined && [ActionType.ActionType_Play, ActionType.ActionType_Cast].includes(aa.actionType)
+                                        }) as InstanceAction[]);
+
+                                        if (availableActionsThatArePlayableOrCastable.length > 0) {
+                                            const handToSort = trackedHand.map(instanceId => {
+                                                return availableActionsThatArePlayableOrCastable.find(action => { return action.instanceId === instanceId })!
+                                            })
+
+                                            console.log(availableActionsThatArePlayableOrCastable, handToSort)
+                                            const sortedHand = handToSort.sort(sortInHand)
+                                            trackedHand = sortedHand.map(({ instanceId }) => instanceId);
+
+                                            console.log('newly sorted hand', trackedHand)
+
+                                            handIsSorted = true;
+                                        }
+                                    }
+                                }
+
                                 //  console.log('AA', availaibleActions.map(entry => { return (entry) }));
 
                                 break;
@@ -158,7 +183,7 @@ export const constructLogEventHandler = (activeLogFile: string) => {
                                 }
                                 if (states) {
                                     for (let k = 0; k < states.length; k++) {
-                                        console.log('state', states[k]?.gameStateMessage?.turnInfo?.step)
+                                        //console.log('state', states[k]?.gameStateMessage?.turnInfo?.step)
                                         if (states[k]?.gameStateMessage?.turnInfo?.step == 'Step_Draw') {
                                             // In the future we shouldn't filter by draw step
                                             const drawTransitions = states[k]?.gameStateMessage.annotations
@@ -174,18 +199,16 @@ export const constructLogEventHandler = (activeLogFile: string) => {
                                         //  console.log((states))
                                     }
                                 }
+                                const newHand = getPlayerHand(userPlayerId, clientMessages[l]);
 
-                                if (trackedHand === undefined) {
-                                    const newHand = getPlayerHand(userPlayerId, clientMessages[l]);
-                                    if (newHand) {
-                                        const sortedNewHand = newHand.map(instanceId => gameObjects[instanceId]);
+                                if (trackedHand === undefined && newHand && newHand.length > 0) {
 
-                                        // function sortForHand(){
 
-                                        // }
 
-                                        trackedHand = newHand;
-                                    }
+                                    // const sortedNewHand = newHand.map(instanceId => gameObjects[instanceId]);
+                                    // console.log('hand', sortedNewHand)
+                                    trackedHand = newHand;
+
 
                                 }
 
