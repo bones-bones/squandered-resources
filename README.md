@@ -11,13 +11,20 @@ These are things a user _actually_ can do
 
 
 ## Window position info ##
-the window is 1152 wide, 676 tall and at the position 268,25
+the window is 1152 wide, 676 tall
 
-Mulligan 730x575
-Accept 950x575
+Mulligan 462x550  - 0.4 x 0.81
+Accept  682x550 - 0.59 x 0.81
 
-Pass 1350x620
+Pass  1082x595  -   0.94 x 0.88
 
-leftmostcard 430x690
+leftmostcard  162x665   -   0.14 x 0.98
 
-centerfield 850x420
+centerfield  582x395 -  0.51 x 0.58
+
+Play   1049x 630 - 0.91 x 0.93
+
+
+## Hand Logic ##
+If hand has not been instantiated, then sort it according to the CMC logic (not sure how to sort lands yet).
+If the hand has been instantiated, then newly drawn cards will be put at the righthand side and the front of the hand array.

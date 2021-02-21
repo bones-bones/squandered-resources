@@ -1,22 +1,23 @@
 import fs from 'fs';
-//import * as theActiveDeck from './constants/subHumanMonoGreen';
+import * as theActiveDeck from './constants/subHumanMonoGreen';
 import { getActiveGameStates, getActivePlayerId, getGameObjects, getPlayerHand } from './stubsOfCode/functions';
 import { Action, ActionType, CastAction, DeclareAttackersReqMessage, DeclareBlockersRequest, GameObject, PayCostPrompt } from './types';
 import robot from 'robotjs';
 import { getArenaSizeAndPosition } from './stubsOfCode/macSystemInterface';
+import { clickKeep, clickMulligan } from './mouseInteractions';
 
-getArenaSizeAndPosition().then((e: any) => { console.log(`the window is ${e.width} wide, ${e.height} tall and at the position ${e.x},${e.y}`); })
+
 
 export let gameObjects: { [key: string]: GameObject } = {};
 let userPlayerId: number;
-let trackedHand: number[] = [];
+let trackedHand: number[] | undefined;
 let availaibleActions: Action[] = [];
 
 function getValidPlays() {
     const spellsToCast = availaibleActions.filter(action => {
         return action.actionType == ActionType.ActionType_Cast && (action as CastAction).autoTapSolution
     })
-    console.log(availaibleActions);
+    //console.log(availaibleActions);
 }
 
 
@@ -74,6 +75,12 @@ export const constructLogEventHandler = (activeLogFile: string) => {
                             case 'GREMessageType_MulliganReq': {
                                 console.log('Mulligan Time');
                                 console.log(`hand:`, trackedHand);
+                                const keeper = theActiveDeck.isThisHandAKeeper();
+                                if (keeper) {
+                                    clickKeep();
+                                } else {
+                                    clickMulligan();
+                                }
 
                                 break;
                             }
@@ -124,7 +131,7 @@ export const constructLogEventHandler = (activeLogFile: string) => {
                             case 'GREMessageType_ActionsAvailableReq': {
                                 console.log('Getting available actions');
                                 availaibleActions = (clientMessages[l].actionsAvailableReq.actions);
-                                console.log('AA', availaibleActions.map(entry => { return (entry) }));
+                                //  console.log('AA', availaibleActions.map(entry => { return (entry) }));
 
                                 break;
                             }
@@ -143,6 +150,7 @@ export const constructLogEventHandler = (activeLogFile: string) => {
                                 console.log('Default Case');
                                 getValidPlays();
 
+
                                 const states = getActiveGameStates(responseJSON);
                                 if (!userPlayerId) {
                                     userPlayerId = getActivePlayerId(states[0]);
@@ -150,22 +158,47 @@ export const constructLogEventHandler = (activeLogFile: string) => {
                                 }
                                 if (states) {
                                     for (let k = 0; k < states.length; k++) {
+                                        console.log('state', states[k]?.gameStateMessage?.turnInfo?.step)
+                                        if (states[k]?.gameStateMessage?.turnInfo?.step == 'Step_Draw') {
+                                            // In the future we shouldn't filter by draw step
+                                            const drawTransitions = states[k]?.gameStateMessage.annotations
+                                        }
+
+
                                         const gameObs = (getGameObjects(states[k]))
                                         gameObs.forEach((element: GameObject) => {
+                                            console.log(element.instanceId);
                                             gameObjects[`${element.instanceId}`] = element;
                                         });
                                         // console.log('known game objects', gameObjects)
                                         //  console.log((states))
                                     }
                                 }
-                                const newHand = getPlayerHand(userPlayerId, clientMessages[l]);
-                                if (newHand != null) {
-                                    console.log('newHand', newHand, 'trackedHand', trackedHand)
-                                    trackedHand = newHand;
+
+                                if (trackedHand === undefined) {
+                                    const newHand = getPlayerHand(userPlayerId, clientMessages[l]);
+                                    if (newHand) {
+                                        const sortedNewHand = newHand.map(instanceId => gameObjects[instanceId]);
+
+                                        // function sortForHand(){
+
+                                        // }
+
+                                        trackedHand = newHand;
+                                    }
+
                                 }
+
+                                // if (newHand != null) {
+                                //     console.log('newHand', newHand, 'trackedHand', trackedHand);
+                                //     //trackedHand = newHand;
+                                // }
                             }
                         }
                     }
+                } else if (responseJSON.gameStateMessage) {
+                    console.log('i try and sync draws', responseJSON.gameStateMessage.turnInfo.step)
+
                 } else {
                     console.log('this is new...', responseJSON)
                 }

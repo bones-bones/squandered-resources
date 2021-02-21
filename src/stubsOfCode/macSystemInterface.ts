@@ -14,16 +14,10 @@ export const getArenaSizeAndPosition = (): Promise<ArenaWindowInfo> => {
             const [x, y] = values[1].split(', ');
             resolve({ x: parseInt(x), y: parseInt(y), width: parseInt(width), height: parseInt(height) });
         })
-
-
     })
-
-
-
 }
 
-
-interface ArenaWindowInfo {
+export interface ArenaWindowInfo {
     x: number
     y: number
     width: number

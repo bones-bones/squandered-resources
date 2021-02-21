@@ -17,3 +17,6 @@ export const subHumanMonoGreen = {
 
 
 
+export const isThisHandAKeeper = () => {
+    return true;
+}

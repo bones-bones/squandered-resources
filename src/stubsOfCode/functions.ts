@@ -14,7 +14,7 @@ export function getActivePlayerId(activeState: any) {
 }
 export const getGameObjects: (activeState: any) => any[] = (activeState) => { return activeState.gameStateMessage.gameObjects || [] }
 
-export function getPlayerHand(playerId: number, activeState: any) {
+export function getPlayerHand(playerId: number, activeState: any): number[] | null { // the return type here is probably just number[]
     if (activeState && activeState.gameStateMessage && activeState.gameStateMessage.zones) {
         const handInstances = activeState.gameStateMessage.zones.find((zoneEntry: any) => {
             return zoneEntry.ownerSeatId ==
@@ -23,10 +23,10 @@ export function getPlayerHand(playerId: number, activeState: any) {
 
         if (!handInstances) { return [] }
 
-        const handCards = handInstances?.map((handCardId: number) => gameObjects[`${handCardId}`]);
-
+        //const handCards = handInstances?.map((handCardId: number) => gameObjects[`${handCardId}`]);
+        return handInstances
         // console.log(handInstances, 'logging hand', handCards)
-        return handCards?.map(({ name }: { name: string }) => name);
+        // return handCards?.map(({ name }: { name: string }) => name);
     } else { return null; }
 }
 
