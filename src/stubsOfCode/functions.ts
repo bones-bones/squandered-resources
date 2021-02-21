@@ -25,8 +25,8 @@ export function getPlayerHand(playerId: number, activeState: any) {
 
         const handCards = handInstances?.map((handCardId: number) => gameObjects[`${handCardId}`]);
 
-        console.log(handInstances, 'logging hand', handCards)
+        // console.log(handInstances, 'logging hand', handCards)
         return handCards?.map(({ name }: { name: string }) => name);
-    } else { console.log('no zones yet'); return []; }
+    } else { return null; }
 }
 

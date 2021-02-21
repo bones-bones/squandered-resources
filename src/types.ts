@@ -171,9 +171,15 @@ export interface PayCostPrompt {
 }
 
 interface PromptParameter {
-    parameterName: 'Cost'
-    type: 'ParameterType_NonLocalizedString',
-    stringValue: 'oGoGoGoGoG' // this bit baffles me
+    parameterName: 'Cost' | 'PlayerId'
+    type: 'ParameterType_NonLocalizedString' | 'ParameterType_Reference' | 'ParameterType_Number'
+    stringValue?: 'oGoGoGoGoG' // this bit baffles me
+    numberValue?: number
+    reference?: {
+        type: string
+        id: number
+    }
+
 }
 
 interface PaymentAction extends Action {
@@ -202,4 +208,57 @@ interface ManaPaymentCondition {
     specs?: ManaSpecType[]// okay there is some weirdness here. Technically Predictive mana counts as a spec
     abilityGrpId: number
     type: 'ManaPaymentConditionType_Threshold'
+}
+
+export interface DeclareBlockersRequest {
+    type: 'GREMessageType_DeclareBlockersReq'
+    systemSeatIds: [1 | 2]
+    msgId: number
+    gameStateId: number// never seen this before...
+    prompt: {
+        promptId: 7
+    }
+    declareBlockersReq: { blockers: Blocker[] }
+
+}
+
+interface Blocker {
+    blockerInstanceId: number // id of the creature that could possibly block
+    attackerInstanceIds: number[] //iids of all attacking creatures that this could block
+    maxAttackers: number// I assume the number of creatures this can block?
+}
+
+export interface DieRollResultResp {
+    type: 'GREMessageType_DieRollResultsResp',
+    systemSeatIds: [1, 2]
+    msgId: number //This seems to be close to the transaction id
+    dieRollResultsResp: {
+        playerDieRolls: DieRoll[]
+    }
+
+}
+interface DieRoll {
+    systemSeatId: 1 | 2
+    rollValue: number
+}
+
+export interface GenericPrompt {
+    type: 'GREMessageType_PromptReq',
+    systemSeatIds: [1, 2]
+    msgId: number
+    gameStateId: number
+    prompt: { promptId: number, parameters: PromptParameter[] }
+}
+
+export interface MulliganRequest {
+    type: 'GREMessageType_MulliganReq'
+    systemSeatIds: [1 | 2]
+    msgId: number
+    gameStateId: number
+    prompt: {
+        promptId: 34
+        parameters: { parameterName: 'NumberOfCards', type: 'ParameterType_Number', numberValue: number }
+    }
+    mulliganReq: { mulliganType: 'MulliganType_London' }
+
 }

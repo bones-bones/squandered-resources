@@ -1,12 +1,23 @@
 import fs from 'fs';
-import { subHumanMonoGreen } from './constants/subHumanMonoGreen';
+//import * as theActiveDeck from './constants/subHumanMonoGreen';
 import { getActiveGameStates, getActivePlayerId, getGameObjects, getPlayerHand } from './stubsOfCode/functions';
-import { Action, DeclareAttackersReqMessage, GameObject, PayCostPrompt } from './types';
+import { Action, ActionType, CastAction, DeclareAttackersReqMessage, DeclareBlockersRequest, GameObject, PayCostPrompt } from './types';
+import robot from 'robotjs';
+import { getArenaSizeAndPosition } from './stubsOfCode/macSystemInterface';
+
+getArenaSizeAndPosition().then((e: any) => { console.log(`the window is ${e.width} wide, ${e.height} tall and at the position ${e.x},${e.y}`); })
 
 export let gameObjects: { [key: string]: GameObject } = {};
 let userPlayerId: number;
-let trackedHand = [];
+let trackedHand: number[] = [];
 let availaibleActions: Action[] = [];
+
+function getValidPlays() {
+    const spellsToCast = availaibleActions.filter(action => {
+        return action.actionType == ActionType.ActionType_Cast && (action as CastAction).autoTapSolution
+    })
+    console.log(availaibleActions);
+}
 
 
 export const constructLogEventHandler = (activeLogFile: string) => {
@@ -40,16 +51,19 @@ export const constructLogEventHandler = (activeLogFile: string) => {
                 console.log('NEW LOGS', ingestedLogs)
             }
             for (let i = 0; i < entriesThatICareAbout.length; i++) {
-                const ohJson = JSON.parse(entriesThatICareAbout[i]);
+                const responseJSON = JSON.parse(entriesThatICareAbout[i]);
 
-                if (ohJson.error) {
-                    console.error(`Error Entry: `, ohJson.error.errorCode);
-                } else if (ohJson.authenticateResponse) {
+                if (responseJSON.error) {
+                    console.error(`Error Entry: `, responseJSON.error.errorCode);
+                } else if (responseJSON.authenticateResponse) {
                     console.log('Authed');
-                } else if (ohJson.matchGameRoomStateChangedEvent) {
+                } else if (responseJSON.matchGameRoomStateChangedEvent) {
                     console.log('game room change event');
-                } else if (ohJson.greToClientEvent) {
-                    const clientMessages = ohJson.greToClientEvent.greToClientMessages;
+                } else if (responseJSON.type == 'GREMessageType_OrderDamageConfirmation') {
+                    console.log('Time to order damage');
+
+                } else if (responseJSON.greToClientEvent) {
+                    const clientMessages = responseJSON.greToClientEvent.greToClientMessages;
 
                     console.log('Generic Client Event Time', clientMessages.map(({ type }: { type: string }) => type));
 
@@ -57,6 +71,27 @@ export const constructLogEventHandler = (activeLogFile: string) => {
                     for (let l = 0; l < clientMessages.length; l++) {
 
                         switch (clientMessages[l].type) {
+                            case 'GREMessageType_MulliganReq': {
+                                console.log('Mulligan Time');
+                                console.log(`hand:`, trackedHand);
+
+                                break;
+                            }
+                            case 'GREMessageType_GetSettingsResp': {
+                                console.log('Get settings response')
+                                //I'm not going to type this because it looks boring, but it contains user settings
+                                break;
+                            }
+                            case 'GREMessageType_PromptReq': {
+                                console.log('Generic Prompt');
+                                // This is gonna be weird. Probably need to doc all the prompt cases
+                                break;
+                            }
+                            case 'GREMessageType_DieRollResultsResp': {
+                                //Die was rolled
+                                //This might not actually be called here
+                                break;
+                            }
                             case 'GREMessageType_ConnectResp': {
                                 console.log('Game Connected');
                                 break;
@@ -71,6 +106,9 @@ export const constructLogEventHandler = (activeLogFile: string) => {
                             }
                             case 'GREMessageType_DeclareBlockersReq': {
                                 // no blocks
+                                console.log('creatures are attacking, time to not block');
+                                const declareBlockersRequest: DeclareBlockersRequest = clientMessages[l]
+                                break;
                             }
                             case 'GREMessageType_PayCostsReq': {
                                 console.log('Payment Prompt')
@@ -86,11 +124,12 @@ export const constructLogEventHandler = (activeLogFile: string) => {
                             case 'GREMessageType_ActionsAvailableReq': {
                                 console.log('Getting available actions');
                                 availaibleActions = (clientMessages[l].actionsAvailableReq.actions);
-                                console.log('AA', availaibleActions.map(entry => { return entry.actionType }));
+                                console.log('AA', availaibleActions.map(entry => { return (entry) }));
+
                                 break;
                             }
                             case undefined: {
-                                console.log('game state with no type!', ohJson);
+                                console.log('game state with no type!', responseJSON);
                                 break;
                             }
                             case 'GREMessageType_SubmitAttackersResp': {
@@ -102,7 +141,9 @@ export const constructLogEventHandler = (activeLogFile: string) => {
 
                             default: {
                                 console.log('Default Case');
-                                const states = getActiveGameStates(ohJson);
+                                getValidPlays();
+
+                                const states = getActiveGameStates(responseJSON);
                                 if (!userPlayerId) {
                                     userPlayerId = getActivePlayerId(states[0]);
                                     console.log(`you are player: ${userPlayerId}`);
@@ -114,22 +155,21 @@ export const constructLogEventHandler = (activeLogFile: string) => {
                                             gameObjects[`${element.instanceId}`] = element;
                                         });
                                         // console.log('known game objects', gameObjects)
-
-
+                                        //  console.log((states))
                                     }
                                 }
-                                trackedHand = (getPlayerHand(userPlayerId, clientMessages[l]));
+                                const newHand = getPlayerHand(userPlayerId, clientMessages[l]);
+                                if (newHand != null) {
+                                    console.log('newHand', newHand, 'trackedHand', trackedHand)
+                                    trackedHand = newHand;
+                                }
                             }
                         }
                     }
                 } else {
-                    console.log('this is new...', ohJson)
+                    console.log('this is new...', responseJSON)
                 }
             }
         }
     }
 }
-// cool events
-
-
-
