@@ -7,3 +7,17 @@ Is one of the most helpful things, it is essentially a full sync of game state E
 
 ## actionsAvailableReq ##
 These are things a user _actually_ can do
+
+
+
+## Window position info ##
+the window is 1152 wide, 676 tall and at the position 268,25
+
+Mulligan 730x575
+Accept 950x575
+
+Pass 1350x620
+
+leftmostcard 430x690
+
+centerfield 850x420
