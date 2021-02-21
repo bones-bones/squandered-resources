@@ -11,15 +11,12 @@ const SABERTOOTH = ''; //4
 const GIGANTOSAURUS = ''; //3
 
 export const subHumanMonoGreen = {
-  [SNOW_FOREST]: 'Snow-Covered Forest',
-  [MARALEAF_RIDER]: 'maraleaf rider',
-  [HORN_BEETLE]: 'Nessian Hornbeetle',
-  [MECHA_GODZILLA]: 'mecha godzilla',
-  [GARENBRIG_PALADIN]: 'garenberg palidan',
-  [PACK_BALOTH]: 'Baloth Packhunter',
-  [BOREAL_RIDER]: 'boreal rider',
-  [YORVO]: 'Yorvo',
-  [BOAR]: 'Bristling Boar',
-  [SABERTOOTH]: 'sabertooth mauler',
-  [GIGANTOSAURUS]: 'GIGANTASAURUS',
-};
+    [SNOW_FOREST]: 'Snow-Covered Forest', [MARALEAF_RIDER]: 'maraleaf rider', [HORN_BEETLE]: 'Nessian Hornbeetle', [MECHA_GODZILLA]: 'mecha godzilla', [GARENBRIG_PALADIN]: 'garenberg palidan',
+    [PACK_BALOTH]: 'Baloth Packhunter', [BOREAL_RIDER]: 'boreal rider', [YORVO]: 'Yorvo', [BOAR]: 'Bristling Boar', [SABERTOOTH]: 'sabertooth mauler', [GIGANTOSAURUS]: "GIGANTASAURUS"
+}
+
+
+
+export const isThisHandAKeeper = () => {
+    return true;
+}
