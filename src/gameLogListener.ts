@@ -13,8 +13,14 @@ import {
   CastAction,
   GameObject,
   InstanceAction,
+  PlayAction,
 } from './types';
-import {clickKeep, clickMulligan} from './mouseInteractions';
+import {
+  clickKeep,
+  clickMulligan,
+  clickPass,
+  playCardFromHand,
+} from './mouseInteractions';
 
 export let gameObjects: {[key: string]: GameObject} = {};
 let userPlayerId: number;
@@ -159,6 +165,7 @@ export const constructLogEventHandler = (
                 console.log('Getting available actions');
                 availaibleActions =
                   clientMessages[l].actionsAvailableReq.actions;
+                //code to sort hands by
                 if (availaibleActions.length > 0) {
                   if (!handIsSorted && trackedHand) {
                     const availableActionsThatArePlayableOrCastable = availaibleActions.filter(
@@ -172,6 +179,10 @@ export const constructLogEventHandler = (
                         );
                       }
                     ) as InstanceAction[];
+                    console.log(
+                      availableActionsThatArePlayableOrCastable,
+                      'availaible actions'
+                    );
 
                     if (availableActionsThatArePlayableOrCastable.length > 0) {
                       const handToSort = trackedHand.map(instanceId => {
@@ -182,7 +193,7 @@ export const constructLogEventHandler = (
                           }
                         )!;
                       });
-                      console.log(handToSort,'hand to sort')
+                      console.log(handToSort, 'hand to sort');
                       const sortedHand = handToSort.sort(sortInHand);
                       trackedHand = sortedHand.map(
                         ({instanceId}) => instanceId
@@ -193,7 +204,37 @@ export const constructLogEventHandler = (
                 }
 
                 // let's fuckin goooo
-                console.log('aa',availaibleActions);
+                console.log('aa', availaibleActions);
+                //LET'S PLAY A LAND MY DUDES
+                const landToPlay = availaibleActions.find(
+                  ({actionType}) => actionType === ActionType.ActionType_Play
+                );
+                if (landToPlay) {
+                  const landiid = (landToPlay as PlayAction).instanceId;
+                  const handSize = trackedHand?.length;
+                  const landIndex = trackedHand?.indexOf(landiid);
+                  const humanLandIndex = 1 + (landIndex as number);
+                  console.log(
+                    `it is the ${humanLandIndex}th of ${handSize} cards`
+                  );
+                  playCardFromHand(humanLandIndex, handSize!);
+                } else {
+                  const spellsToCast = (availaibleActions.filter(aa => {
+                    return (
+                      (aa as InstanceAction).instanceId !== undefined &&
+                      [ActionType.ActionType_Cast].includes(aa.actionType)
+                    );
+                  }) as InstanceAction[]).filter(entry => {
+                    return (entry as CastAction).autoTapSolution;
+                  }) as CastAction[];
+                  const creaturesToPlay = spellsToCast;
+
+                  if (creaturesToPlay.length > 0) {
+                    //
+                  } else {
+                    clickPass();
+                  }
+                }
 
                 break;
               }
@@ -251,19 +292,22 @@ export const constructLogEventHandler = (
                     // console.log('hand', sortedNewHand)
                     trackedHand = newHand;
                   } else if (trackedHand !== undefined) {
-                    console.log('previous hand is ',trackedHand.join(', '));
+                    console.log('previous hand is ', trackedHand.join(', '));
                     const trackedHandFilteredByNewHand = trackedHand.filter(
                       entry => newHand.includes(entry)
                     );
 
-                    const newCardsInHand = newHand.filter(entry =>
-                      // disablinig the line because trackedHand can't be undefined here and i don't know how to tell ts that
-                      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                      !trackedHand!.includes(entry)
+                    const newCardsInHand = newHand.filter(
+                      entry =>
+                        // disablinig the line because trackedHand can't be undefined here and i don't know how to tell ts that
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                        !trackedHand!.includes(entry)
                     );
-                    const reversedNewCards=newCardsInHand.reverse()
-                    trackedHand=trackedHandFilteredByNewHand.concat(reversedNewCards);
-                    console.log('new hand is ', trackedHand.join(', '))
+                    const reversedNewCards = newCardsInHand.reverse();
+                    trackedHand = trackedHandFilteredByNewHand.concat(
+                      reversedNewCards
+                    );
+                    console.log('new hand is ', trackedHand.join(', '));
                   }
                 }
               }
