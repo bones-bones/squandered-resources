@@ -49,10 +49,12 @@ export interface FloatMana extends Action {
   actionType: ActionType.ActionType_FloatMana;
 }
 
-export interface ActivateMana extends Action {
+export interface InstanceAction extends Action {
+  instanceId: number;
+}
+export interface ActivateMana extends InstanceAction {
   actionType: ActionType.ActionType_Activate_Mana;
   grpId: number;
-  instanceId: number;
   abilityGrpId: number;
   manaPaymentOptions: ManaPaymentOption[];
   maxActivations: number;
@@ -60,17 +62,15 @@ export interface ActivateMana extends Action {
 }
 
 //I think playaction is mostly just for lands
-export interface PlayAction extends Action {
+export interface PlayAction extends InstanceAction {
   actionType: ActionType.ActionType_Play;
   grpId: number; // no idea still
-  instanceId: number;
   shouldStop: boolean;
 }
 //I think playaction is mostly just for lands
-export interface CastAction extends Action {
+export interface CastAction extends InstanceAction {
   actionType: ActionType.ActionType_Cast;
   grpId: number; // no idea still
-  instanceId: number;
   shouldStop: boolean;
   manaCost: CostComponent[];
   autoTapSolution?: {autoTapActions: AutoTapAction[]}; //If this is present it means you can cast the spell
@@ -80,12 +80,13 @@ interface CostComponent {
   count: number;
 }
 
-enum Mana_Color {
+export enum Mana_Color {
   Mana_Color_White = 'Mana_Color_White',
   Mana_Color_Black = 'Mana_Color_Black',
   Mana_Color_Blue = 'Mana_Color_Blue',
   Mana_Color_Red = 'CMana_Color_Red',
   Mana_Color_Green = 'Mana_Color_Green',
+  ManaColor_Generic = 'ManaColor_Generic',
 }
 
 interface AutoTapAction {
@@ -189,10 +190,9 @@ interface PromptParameter {
   };
 }
 
-interface PaymentAction extends Action {
+interface PaymentAction extends InstanceAction {
   actionType: ActionType.ActionType_Activate_Mana;
   grpId: number;
-  instanceId: number; //unsure what this refers to
   abilityGrpId: number; //the ability that produces mana
   manaPaymentOptions: ManaPaymentOption[];
   maxActivations: number;

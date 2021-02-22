@@ -23,3 +23,7 @@ export const subHumanMonoGreen = {
   [SABERTOOTH]: 'sabertooth mauler',
   [GIGANTOSAURUS]: 'GIGANTASAURUS',
 };
+
+export const isThisHandAKeeper = (): boolean => {
+  return true;
+};

@@ -9,7 +9,7 @@ export const getArenaSizeAndPosition = (): Promise<ArenaWindowInfo> => {
             return windowSize & "sp" & windowPosition
         end tell'`,
       null,
-      (error, output, stderror) => {
+      (_error, output) => {
         const values = (output as string).split(`, sp, `);
         const [width, height] = values[0].split(', ');
         const [x, y] = values[1].split(', ');
@@ -24,7 +24,7 @@ export const getArenaSizeAndPosition = (): Promise<ArenaWindowInfo> => {
   });
 };
 
-interface ArenaWindowInfo {
+export interface ArenaWindowInfo {
   x: number;
   y: number;
   width: number;

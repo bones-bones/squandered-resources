@@ -18,6 +18,6 @@ export const treasureHunt: {[key: string]: string} = {
 // console.log(`your hand: `, hand?.map((entry: number) => treasureHunt[`${entry}`]));
 // console.log(doIMulligan(hand) ? 'mully' : 'keeper');
 
-export function doIMulligan(handCards: number[]) {
+export function doIMulligan(handCards: number[]): boolean {
   return !handCards?.includes(DIG_FOR_TREASURE_NAME);
 }
