@@ -1,6 +1,6 @@
-import fs from 'fs'
-import { constructLogEventHandler } from './gameLogListener';
-import { clickPlay, setWindowInfo } from './mouseInteractions';
+import fs from 'fs';
+import {constructLogEventHandler} from './gameLogListener';
+import {clickPlay, setWindowInfo} from './mouseInteractions';
 
 console.log('Server is up');
 
@@ -13,14 +13,13 @@ fs.promises
       .sort()
       .pop();
     if (mostRecentLog) {
-        console.log(`Reading from [${mostRecentLog}]`);
-        const hackyFilePath = `../../../Library/Application Support/com.wizards.mtga/Logs/Logs/${mostRecentLog}`
-        // Need to check if mtg fires this twice
-        fs.watchFile(hackyFilePath, constructLogEventHandler(hackyFilePath));
-        setWindowInfo().then(() => {
-            clickPlay();
-        })
-
+      console.log(`Reading from [${mostRecentLog}]`);
+      const hackyFilePath = `../../../Library/Application Support/com.wizards.mtga/Logs/Logs/${mostRecentLog}`;
+      // Need to check if mtg fires this twice
+      fs.watchFile(hackyFilePath, constructLogEventHandler(hackyFilePath));
+      setWindowInfo().then(() => {
+        clickPlay();
+      });
     } else {
       console.error(
         'Log path was correct but no log files were found there...'

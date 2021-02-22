@@ -50,30 +50,30 @@ export interface FloatMana extends Action {
 }
 
 export interface InstanceAction extends Action {
-    instanceId: number
+  instanceId: number;
 }
 export interface ActivateMana extends InstanceAction {
-    actionType: ActionType.ActionType_Activate_Mana
-    grpId: number
-    abilityGrpId: number
-    manaPaymentOptions: ManaPaymentOption[]
-    maxActivations: number
-    isBatchable: boolean
+  actionType: ActionType.ActionType_Activate_Mana;
+  grpId: number;
+  abilityGrpId: number;
+  manaPaymentOptions: ManaPaymentOption[];
+  maxActivations: number;
+  isBatchable: boolean;
 }
 
 //I think playaction is mostly just for lands
 export interface PlayAction extends InstanceAction {
-    actionType: ActionType.ActionType_Play
-    grpId: number// no idea still
-    shouldStop: boolean
+  actionType: ActionType.ActionType_Play;
+  grpId: number; // no idea still
+  shouldStop: boolean;
 }
 //I think playaction is mostly just for lands
 export interface CastAction extends InstanceAction {
-    actionType: ActionType.ActionType_Cast
-    grpId: number// no idea still
-    shouldStop: boolean
-    manaCost: CostComponent[]
-    autoTapSolution?: { autoTapActions: AutoTapAction[] } //If this is present it means you can cast the spell
+  actionType: ActionType.ActionType_Cast;
+  grpId: number; // no idea still
+  shouldStop: boolean;
+  manaCost: CostComponent[];
+  autoTapSolution?: {autoTapActions: AutoTapAction[]}; //If this is present it means you can cast the spell
 }
 interface CostComponent {
   color: Mana_Color[];
@@ -81,12 +81,12 @@ interface CostComponent {
 }
 
 export enum Mana_Color {
-    Mana_Color_White = 'Mana_Color_White',
-    Mana_Color_Black = 'Mana_Color_Black',
-    Mana_Color_Blue = 'Mana_Color_Blue',
-    Mana_Color_Red = 'CMana_Color_Red',
-    Mana_Color_Green = 'Mana_Color_Green',
-    ManaColor_Generic = 'ManaColor_Generic'
+  Mana_Color_White = 'Mana_Color_White',
+  Mana_Color_Black = 'Mana_Color_Black',
+  Mana_Color_Blue = 'Mana_Color_Blue',
+  Mana_Color_Red = 'CMana_Color_Red',
+  Mana_Color_Green = 'Mana_Color_Green',
+  ManaColor_Generic = 'ManaColor_Generic',
 }
 
 interface AutoTapAction {
@@ -191,12 +191,12 @@ interface PromptParameter {
 }
 
 interface PaymentAction extends InstanceAction {
-    actionType: ActionType.ActionType_Activate_Mana
-    grpId: number
-    abilityGrpId: number //the ability that produces mana
-    manaPaymentOptions: ManaPaymentOption[]
-    maxActivations: number
-    isBatchable: boolean
+  actionType: ActionType.ActionType_Activate_Mana;
+  grpId: number;
+  abilityGrpId: number; //the ability that produces mana
+  manaPaymentOptions: ManaPaymentOption[];
+  maxActivations: number;
+  isBatchable: boolean;
 }
 
 interface AutoTapSolution {
