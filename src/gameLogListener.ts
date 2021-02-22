@@ -11,12 +11,8 @@ import {
   Action,
   ActionType,
   CastAction,
-  DeclareAttackersReqMessage,
-  DeclareBlockersRequest,
   GameObject,
   InstanceAction,
-  Mana_Color,
-  PayCostPrompt,
 } from './types';
 import {clickKeep, clickMulligan} from './mouseInteractions';
 
@@ -37,7 +33,9 @@ function getValidPlays() {
   //console.log(availaibleActions);
 }
 
-export const constructLogEventHandler = (activeLogFile: string) => {
+export const constructLogEventHandler = (
+  activeLogFile: string
+): (() => Promise<void>) => {
   let currentIndex = 0;
 
   return async () => {
@@ -121,6 +119,7 @@ export const constructLogEventHandler = (activeLogFile: string) => {
                 break;
               }
               case 'GREMessageType_DieRollResultsResp': {
+                console.log('Die was rolled');
                 //Die was rolled
                 //This might not actually be called here
                 break;
@@ -140,8 +139,8 @@ export const constructLogEventHandler = (activeLogFile: string) => {
               case 'GREMessageType_DeclareBlockersReq': {
                 // no blocks
                 console.log('creatures are attacking, time to not block');
-                const declareBlockersRequest: DeclareBlockersRequest =
-                  clientMessages[l];
+                // const declareBlockersRequest: DeclareBlockersRequest =
+                //   clientMessages[l];
                 break;
               }
               case 'GREMessageType_PayCostsReq': {
@@ -152,8 +151,8 @@ export const constructLogEventHandler = (activeLogFile: string) => {
               }
               case 'GREMessageType_DeclareAttackersReq': {
                 console.log('entering Turn Them Sideways step');
-                const attackerMessage: DeclareAttackersReqMessage =
-                  clientMessages[l];
+                // const attackerMessage: DeclareAttackersReqMessage =
+                //   clientMessages[l];
                 break;
               }
               case 'GREMessageType_ActionsAvailableReq': {
@@ -162,13 +161,6 @@ export const constructLogEventHandler = (activeLogFile: string) => {
                   clientMessages[l].actionsAvailableReq.actions;
                 if (availaibleActions.length > 0) {
                   if (!handIsSorted && trackedHand) {
-                    console.log(
-                      'un sorted hand',
-                      trackedHand,
-                      'aa',
-                      availaibleActions
-                    );
-
                     const availableActionsThatArePlayableOrCastable = availaibleActions.filter(
                       aa => {
                         return (
@@ -183,28 +175,25 @@ export const constructLogEventHandler = (activeLogFile: string) => {
 
                     if (availableActionsThatArePlayableOrCastable.length > 0) {
                       const handToSort = trackedHand.map(instanceId => {
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         return availableActionsThatArePlayableOrCastable.find(
                           action => {
                             return action.instanceId === instanceId;
                           }
                         )!;
                       });
-
-                      console.log(
-                        availableActionsThatArePlayableOrCastable,
-                        handToSort
-                      );
+                      console.log(handToSort,'hand to sort')
                       const sortedHand = handToSort.sort(sortInHand);
                       trackedHand = sortedHand.map(
                         ({instanceId}) => instanceId
                       );
-
-                      console.log('newly sorted hand', trackedHand);
-
                       handIsSorted = true;
                     }
                   }
                 }
+
+                // let's fuckin goooo
+                console.log('aa',availaibleActions);
 
                 break;
               }
@@ -216,10 +205,11 @@ export const constructLogEventHandler = (activeLogFile: string) => {
                 //TODO handle prompts
                 break;
               }
-              case 'GREMessageType_GameStateMessage': {
-                // This seems to be the big one
-                break;
-              }
+              // case 'GREMessageType_GameStateMessage': {
+              //   // This seems to be the big one
+              // commenting out because no fallthroughs are allowed
+              //   break;
+              // }
 
               default: {
                 console.log('Default Case');
@@ -232,16 +222,17 @@ export const constructLogEventHandler = (activeLogFile: string) => {
                 }
                 if (states) {
                   for (let k = 0; k < states.length; k++) {
-                    console.log(
-                      'state',
-                      states[k]?.gameStateMessage?.turnInfo?.step
-                    );
+                    // console.log(
+                    //   'state',
+                    //   states[k]?.gameStateMessage?.turnInfo?.step
+                    // );
                     if (
                       states[k]?.gameStateMessage?.turnInfo?.step == 'Step_Draw'
                     ) {
-                      // In the future we shouldn't filter by draw step
-                      const drawTransitions =
-                        states[k]?.gameStateMessage.annotations;
+                      // In the future we shouldn't filter by draw step and instead track all card transitions
+                      // Hmm we might not need this, I'll try putting the logic in the hand sync event
+                      // const drawTransitions =
+                      //   states[k]?.gameStateMessage.annotations;
                     }
 
                     const gameObs = getGameObjects(states[k]);
@@ -250,25 +241,31 @@ export const constructLogEventHandler = (activeLogFile: string) => {
                       gameObjects[`${element.instanceId}`] = element;
                     });
                     // console.log('known game objects', gameObjects)
-                    //  console.log((states))
                   }
                 }
                 const newHand = getPlayerHand(userPlayerId, clientMessages[l]);
+                console.log(newHand, 'is the new hand');
+                if (newHand && newHand.length > 0) {
+                  if (trackedHand === undefined) {
+                    // const sortedNewHand = newHand.map(instanceId => gameObjects[instanceId]);
+                    // console.log('hand', sortedNewHand)
+                    trackedHand = newHand;
+                  } else if (trackedHand !== undefined) {
+                    console.log('previous hand is ',trackedHand.join(', '));
+                    const trackedHandFilteredByNewHand = trackedHand.filter(
+                      entry => newHand.includes(entry)
+                    );
 
-                if (
-                  trackedHand === undefined &&
-                  newHand &&
-                  newHand.length > 0
-                ) {
-                  // const sortedNewHand = newHand.map(instanceId => gameObjects[instanceId]);
-                  // console.log('hand', sortedNewHand)
-                  trackedHand = newHand;
+                    const newCardsInHand = newHand.filter(entry =>
+                      // disablinig the line because trackedHand can't be undefined here and i don't know how to tell ts that
+                      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                      !trackedHand!.includes(entry)
+                    );
+                    const reversedNewCards=newCardsInHand.reverse()
+                    trackedHand=trackedHandFilteredByNewHand.concat(reversedNewCards);
+                    console.log('new hand is ', trackedHand.join(', '))
+                  }
                 }
-
-                // if (newHand != null) {
-                //     console.log('newHand', newHand, 'trackedHand', trackedHand);
-                //     //trackedHand = newHand;
-                // }
               }
             }
           }
