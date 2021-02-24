@@ -10,7 +10,7 @@ const BOAR = ''; //4
 const SABERTOOTH = ''; //4
 const GIGANTOSAURUS = ''; //3
 
-export const subHumanMonoGreen = {
+export const cardList = {
   [SNOW_FOREST]: 'Snow-Covered Forest',
   [MARALEAF_RIDER]: 'maraleaf rider',
   [HORN_BEETLE]: 'Nessian Hornbeetle',

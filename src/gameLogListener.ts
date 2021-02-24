@@ -147,6 +147,7 @@ export const constructLogEventHandler = (
                 console.log('creatures are attacking, time to not block');
                 // const declareBlockersRequest: DeclareBlockersRequest =
                 //   clientMessages[l];
+                clickPass();
                 break;
               }
               case 'GREMessageType_PayCostsReq': {
@@ -157,6 +158,9 @@ export const constructLogEventHandler = (
               }
               case 'GREMessageType_DeclareAttackersReq': {
                 console.log('entering Turn Them Sideways step');
+
+                clickPass();
+
                 // const attackerMessage: DeclareAttackersReqMessage =
                 //   clientMessages[l];
                 break;
@@ -204,33 +208,41 @@ export const constructLogEventHandler = (
                 }
 
                 // let's fuckin goooo
-                console.log('aa', availaibleActions);
+                //console.log('aa', availaibleActions);
+                const handSize = trackedHand?.length;
+
                 //LET'S PLAY A LAND MY DUDES
                 const landToPlay = availaibleActions.find(
                   ({actionType}) => actionType === ActionType.ActionType_Play
                 );
                 if (landToPlay) {
                   const landiid = (landToPlay as PlayAction).instanceId;
-                  const handSize = trackedHand?.length;
                   const landIndex = trackedHand?.indexOf(landiid);
-                  const humanLandIndex = 1 + (landIndex as number);
+                  const humanLandIndex = landIndex as number;
                   console.log(
-                    `it is the ${humanLandIndex}th of ${handSize} cards`
+                    `it is the ${humanLandIndex + 1}th of ${handSize} cards`
                   );
                   playCardFromHand(humanLandIndex, handSize!);
                 } else {
-                  const spellsToCast = (availaibleActions.filter(aa => {
+                  const castableSpells = (availaibleActions.filter(aa => {
                     return (
                       (aa as InstanceAction).instanceId !== undefined &&
-                      [ActionType.ActionType_Cast].includes(aa.actionType)
+                      ActionType.ActionType_Cast == aa.actionType
                     );
                   }) as InstanceAction[]).filter(entry => {
                     return (entry as CastAction).autoTapSolution;
                   }) as CastAction[];
-                  const creaturesToPlay = spellsToCast;
 
-                  if (creaturesToPlay.length > 0) {
-                    //
+                  const playAbleCreatures = castableSpells;
+                  if (playAbleCreatures.length > 0) {
+                    const playAbleCreatureIndex = trackedHand?.indexOf(
+                      playAbleCreatures[0].instanceId
+                    ) as number;
+
+                    console.log(
+                      `it is the ${playAbleCreatureIndex}th of ${handSize} cards`
+                    );
+                    playCardFromHand(playAbleCreatureIndex, handSize!);
                   } else {
                     clickPass();
                   }
@@ -244,6 +256,8 @@ export const constructLogEventHandler = (
               }
               case 'GREMessageType_SubmitAttackersResp': {
                 //TODO handle prompts
+                console.log('submit attackers response');
+                clickPass();
                 break;
               }
               // case 'GREMessageType_GameStateMessage': {
@@ -285,8 +299,9 @@ export const constructLogEventHandler = (
                   }
                 }
                 const newHand = getPlayerHand(userPlayerId, clientMessages[l]);
-                console.log(newHand, 'is the new hand');
+                i;
                 if (newHand && newHand.length > 0) {
+                  console.log(newHand, 'is the new hand');
                   if (trackedHand === undefined) {
                     // const sortedNewHand = newHand.map(instanceId => gameObjects[instanceId]);
                     // console.log('hand', sortedNewHand)
@@ -307,7 +322,14 @@ export const constructLogEventHandler = (
                     trackedHand = trackedHandFilteredByNewHand.concat(
                       reversedNewCards
                     );
-                    console.log('new hand is ', trackedHand.join(', '));
+                    console.log(
+                      'new hand is ',
+                      trackedHand
+                        .map((iid: number) => {
+                          return gameObjects[iid].name;
+                        })
+                        .join(', ')
+                    );
                   }
                 }
               }

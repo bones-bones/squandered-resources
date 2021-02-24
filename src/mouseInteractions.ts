@@ -19,15 +19,15 @@ export function setWindowInfo(): Promise<void> {
 }
 
 export function clickPlay(): Promise<void> {
-  return new Promise<void>(resolve => {
+  return new Promise<void>(async (resolve) => {
     robotjs.moveMouse(
       windowInfo.width * PLAY_BUTTON.x + windowInfo.x,
       windowInfo.height * PLAY_BUTTON.y + windowInfo.y
     );
+    await sleep(1000);
     robotjs.mouseClick();
-    setTimeout(() => {
-      robotjs.mouseClick();
-    }, 1000);
+    await sleep(1000);
+    robotjs.mouseClick();
     resolve();
   });
 }
@@ -57,6 +57,7 @@ export function clickKeep(): Promise<void> {
     }, 1000);
   });
 }
+
 export function playCardFromHand(
   cardIndex: number,
   cardsInHand: number
@@ -64,7 +65,11 @@ export function playCardFromHand(
   // eslint-disable-next-line no-async-promise-executor
   return new Promise<void>(async resolve => {
     robotjs.moveMouse(
-      1 + windowInfo.width / 2 - cardsInHand * 53 + cardIndex * 103,
+      1 +
+        windowInfo.width / 2 +
+        windowInfo.x -
+        cardsInHand * (0.04 * windowInfo.width) +
+        cardIndex * (0.09 * windowInfo.width),
       windowInfo.height + windowInfo.y - 1
     );
     await sleep();
