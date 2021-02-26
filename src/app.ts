@@ -1,24 +1,30 @@
 import fs from 'fs';
 import {constructLogEventHandler} from './gameLogListener';
-import {clickPlay, setWindowInfo} from './mouseInteractions';
+import {clickPlayMatch, setWindowInfo} from './mouseInteractions';
 
 console.log('Server is up');
 
 // TODO: find a not garbage way to do this
 fs.promises
-  .readdir('../../../Library/Application Support/com.wizards.mtga/Logs/Logs')
-  .then(files => {
+  .readdir('../../../Library/Logs/Wizards Of The Coast/MTGA')
+  .then(async files => {
     const mostRecentLog = files
-      .filter(fileName => fileName.includes('UTC_Log'))
+      .filter(fileName => fileName === 'Player.log')
       .sort()
       .pop();
+
+    await fs.promises.writeFile(
+      '../../../Library/Logs/Wizards Of The Coast/MTGA/Player.log',
+      ''
+    );
+
     if (mostRecentLog) {
       console.log(`Reading from [${mostRecentLog}]`);
-      const hackyFilePath = `../../../Library/Application Support/com.wizards.mtga/Logs/Logs/${mostRecentLog}`;
+      const hackyFilePath = `../../../Library/Logs/Wizards Of The Coast/MTGA/Player.log`;
       // Need to check if mtg fires this twice
       fs.watchFile(hackyFilePath, constructLogEventHandler(hackyFilePath));
       setWindowInfo().then(() => {
-        clickPlay();
+        clickPlayMatch();
       });
     } else {
       console.error(

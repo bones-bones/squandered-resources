@@ -11,7 +11,7 @@ export function getActiveGameStates(body: any): any[] {
   );
 }
 
-export function getActivePlayerId(activeState: any) {
+export function getActivePlayerId(activeState: any): number {
   return activeState.systemSeatIds[0];
 }
 export const getGameObjects: (activeState: any) => any[] = activeState => {

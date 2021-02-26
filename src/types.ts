@@ -16,6 +16,11 @@ export interface GameObject {
   overlayGrpId: number; // not sure????
 }
 
+// TODO: flesh this out with all the decision points a deck will have
+export interface Deck {
+  keepHandCheck?: () => boolean;
+}
+
 enum CardType {
   CardType_Creature = 'CardType_Creature',
 }
