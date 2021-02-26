@@ -6,11 +6,11 @@ const GARENBRIG_PALADIN = '414122'; //4
 const PACK_BALOTH = '478096'; //4
 const BOREAL_RIDER = '477541'; //4
 const YORVO = ''; //1
-const BOAR = ''; //4
-const SABERTOOTH = ''; //4
-const GIGANTOSAURUS = ''; //3
+const BOAR = '229667'; //4
+const SABERTOOTH = '434042'; //4
+const GIGANTOSAURUS = '229691'; //3
 
-export const cardList = {
+export const cardList: {[key: string]: string} = {
   [SNOW_FOREST]: 'Snow-Covered Forest',
   [MARALEAF_RIDER]: 'maraleaf rider',
   [HORN_BEETLE]: 'Nessian Hornbeetle',

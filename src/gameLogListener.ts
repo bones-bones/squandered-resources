@@ -16,10 +16,14 @@ import {
   PlayAction,
 } from './types';
 import {
+  clickConfirmButton,
   clickKeep,
   clickMulligan,
+  clickOrderBlockers,
   clickPass,
+  
   playCardFromHand,
+  sleep,
 } from './mouseInteractions';
 
 export let gameObjects: {[key: string]: GameObject} = {};
@@ -27,6 +31,7 @@ let userPlayerId: number;
 let trackedHand: number[] | undefined;
 let availaibleActions: Action[] = [];
 let handIsSorted = false;
+let cardsToAddToBackOfHand:number[]=[];
 
 function getValidPlays() {
   const spellsToCast = availaibleActions.filter(action => {
@@ -74,7 +79,6 @@ export const constructLogEventHandler = (
       const entriesThatICareAbout = ingestedLogs.filter(
         entry => entry[0] == '{' && entry[entry.length - 1] == '}'
       );
-      //console.log(entriesThatICareAbout);
       if (!entriesThatICareAbout || entriesThatICareAbout.length == 0) {
         console.log('NEW LOGS', ingestedLogs);
       }
@@ -95,14 +99,11 @@ export const constructLogEventHandler = (
           const clientMessages =
             responseJSON.greToClientEvent.greToClientMessages;
 
-          console.log(
-            'Generic Client Event Time',
-            clientMessages.map(({type}: {type: string}) => type)
-          );
-
           for (let l = 0; l < clientMessages.length; l++) {
+            console.log(`processing a :`, clientMessages[l].type);
             switch (clientMessages[l].type) {
               case 'GREMessageType_MulliganReq': {
+                await sleep(3000);
                 console.log('Mulligan Time');
                 console.log(`hand:`, trackedHand);
                 const keeper = theActiveDeck.isThisHandAKeeper();
@@ -150,15 +151,26 @@ export const constructLogEventHandler = (
                 clickPass();
                 break;
               }
+              case 'GREMessageType_OrderCombatDamageReq':{
+                console.log('assigning combat damage');
+                clickOrderBlockers();
+                break;
+              }
+              case 'GREMessageType_SelectReplacementReq':{
+                console.log('select which replacement effect to apply');
+                break;
+              }
               case 'GREMessageType_PayCostsReq': {
                 console.log('Payment Prompt');
+                //await sleep()
+                clickConfirmButton();
                 //  console.log(JSON.stringify(clientMessages[l]))
                 //const payCostPrompt: PayCostPrompt = clientMessages[l];
                 break;
               }
               case 'GREMessageType_DeclareAttackersReq': {
                 console.log('entering Turn Them Sideways step');
-
+                await sleep();
                 clickPass();
 
                 // const attackerMessage: DeclareAttackersReqMessage =
@@ -172,6 +184,9 @@ export const constructLogEventHandler = (
                 //code to sort hands by
                 if (availaibleActions.length > 0) {
                   if (!handIsSorted && trackedHand) {
+
+
+
                     const availableActionsThatArePlayableOrCastable = availaibleActions.filter(
                       aa => {
                         return (
@@ -189,7 +204,16 @@ export const constructLogEventHandler = (
                     );
 
                     if (availableActionsThatArePlayableOrCastable.length > 0) {
-                      const handToSort = trackedHand.map(instanceId => {
+                      console.log('before sorting',trackedHand
+                        .map((iid: number) => {
+                          return (
+                            theActiveDeck.cardList[
+                              `${gameObjects[iid].name}`
+                            ] || gameObjects[iid].name
+                          );
+                        })
+                        .join(', '))
+                      const handToSort = trackedHand.filter((iid:number)=>!cardsToAddToBackOfHand.includes(iid)).map(instanceId => {
                         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         return availableActionsThatArePlayableOrCastable.find(
                           action => {
@@ -197,11 +221,22 @@ export const constructLogEventHandler = (
                           }
                         )!;
                       });
-                      console.log(handToSort, 'hand to sort');
+                      
                       const sortedHand = handToSort.sort(sortInHand);
+
+                      console.log('after sorting',trackedHand
+                        .map((iid: number) => {
+                          return (
+                            theActiveDeck.cardList[
+                              `${gameObjects[iid].name}`
+                            ] || gameObjects[iid].name
+                          );
+                        })
+                        .join(', '))
                       trackedHand = sortedHand.map(
                         ({instanceId}) => instanceId
-                      );
+                      ).concat(cardsToAddToBackOfHand);
+
                       handIsSorted = true;
                     }
                   }
@@ -215,12 +250,13 @@ export const constructLogEventHandler = (
                 const landToPlay = availaibleActions.find(
                   ({actionType}) => actionType === ActionType.ActionType_Play
                 );
+                await sleep(4000);
                 if (landToPlay) {
                   const landiid = (landToPlay as PlayAction).instanceId;
                   const landIndex = trackedHand?.indexOf(landiid);
                   const humanLandIndex = landIndex as number;
                   console.log(
-                    `it is the ${humanLandIndex + 1}th of ${handSize} cards`
+                    `it is the ${humanLandIndex} index of ${handSize} cards`
                   );
                   playCardFromHand(humanLandIndex, handSize!);
                 } else {
@@ -277,10 +313,6 @@ export const constructLogEventHandler = (
                 }
                 if (states) {
                   for (let k = 0; k < states.length; k++) {
-                    // console.log(
-                    //   'state',
-                    //   states[k]?.gameStateMessage?.turnInfo?.step
-                    // );
                     if (
                       states[k]?.gameStateMessage?.turnInfo?.step == 'Step_Draw'
                     ) {
@@ -292,7 +324,6 @@ export const constructLogEventHandler = (
 
                     const gameObs = getGameObjects(states[k]);
                     gameObs.forEach((element: GameObject) => {
-                      console.log(element.instanceId);
                       gameObjects[`${element.instanceId}`] = element;
                     });
                     // console.log('known game objects', gameObjects)
@@ -307,7 +338,19 @@ export const constructLogEventHandler = (
                     // console.log('hand', sortedNewHand)
                     trackedHand = newHand;
                   } else if (trackedHand !== undefined) {
-                    console.log('previous hand is ', trackedHand.join(', '));
+
+                    console.log(
+                      'previous hand is ',
+                      trackedHand
+                        .map((iid: number) => {
+                          return (
+                            theActiveDeck.cardList[
+                              `${gameObjects[iid].name}`
+                            ] || gameObjects[iid].name
+                          );
+                        })
+                        .join(', ')
+                    );
                     const trackedHandFilteredByNewHand = trackedHand.filter(
                       entry => newHand.includes(entry)
                     );
@@ -318,6 +361,9 @@ export const constructLogEventHandler = (
                         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         !trackedHand!.includes(entry)
                     );
+                    if(!handIsSorted){
+                      cardsToAddToBackOfHand.concat(newCardsInHand)
+                    }
                     const reversedNewCards = newCardsInHand.reverse();
                     trackedHand = trackedHandFilteredByNewHand.concat(
                       reversedNewCards
@@ -326,7 +372,11 @@ export const constructLogEventHandler = (
                       'new hand is ',
                       trackedHand
                         .map((iid: number) => {
-                          return gameObjects[iid].name;
+                          return (
+                            theActiveDeck.cardList[
+                              `${gameObjects[iid].name}`
+                            ] || gameObjects[iid].name
+                          );
                         })
                         .join(', ')
                     );

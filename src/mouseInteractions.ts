@@ -18,8 +18,8 @@ export function setWindowInfo(): Promise<void> {
   });
 }
 
-export function clickPlay(): Promise<void> {
-  return new Promise<void>(async (resolve) => {
+export function clickPlayMatch(): Promise<void> {
+  return new Promise<void>(async resolve => {
     robotjs.moveMouse(
       windowInfo.width * PLAY_BUTTON.x + windowInfo.x,
       windowInfo.height * PLAY_BUTTON.y + windowInfo.y
@@ -27,6 +27,17 @@ export function clickPlay(): Promise<void> {
     await sleep(1000);
     robotjs.mouseClick();
     await sleep(1000);
+    robotjs.mouseClick();
+    resolve();
+  });
+}
+
+export function clickConfirmButton(): Promise<void> {
+  return new Promise<void>(resolve => {
+    robotjs.moveMouse(
+      windowInfo.width * PASS_BUTTON.x + windowInfo.x,
+      windowInfo.height * PASS_BUTTON.y + windowInfo.y
+    );
     robotjs.mouseClick();
     resolve();
   });
@@ -44,6 +55,21 @@ export function clickPass(): Promise<void> {
     resolve();
   });
 }
+
+
+
+     export function clickOrderBlockers(): Promise<void> {
+      return new Promise<void>(resolve => {
+        robotjs.moveMouse(
+          windowInfo.width * ORDER_BLOCKERS_BUTTON.x + windowInfo.x,
+          windowInfo.height * ORDER_BLOCKERS_BUTTON.y + windowInfo.y
+        );
+        setTimeout(() => {
+          robotjs.mouseClick();
+          resolve();
+        }, 1000);
+      });
+    }
 
 export function clickKeep(): Promise<void> {
   return new Promise<void>(resolve => {
@@ -72,24 +98,22 @@ export function playCardFromHand(
         cardIndex * (0.09 * windowInfo.width),
       windowInfo.height + windowInfo.y - 1
     );
-    await sleep();
+    await sleep(300);
     robotjs.mouseClick();
-    await sleep();
-
+    await sleep(300);
     robotjs.moveMouse(
       windowInfo.width * CENTER_FIELD.x + windowInfo.x,
       windowInfo.height * CENTER_FIELD.y + windowInfo.y
     );
-    await sleep();
-
+    await sleep(300);
     robotjs.mouseClick();
-    await sleep();
+    // await sleep();
 
     resolve();
   });
 }
 
-const sleep = (time = 1000) => {
+export const sleep = (time = 1000) => {
   return new Promise<void>(resolve => {
     setTimeout(() => {
       resolve();
@@ -134,3 +158,6 @@ const PLAY_BUTTON = {
   x: 0.91,
   y: 0.93,
 };
+
+const ORDER_BLOCKERS_BUTTON={x:0.50,y:0.81}
+
