@@ -55,7 +55,9 @@ function buttonClickConstructor(button: {x: number; y: number}) {
 }
 export const clickAttack = async (): Promise<void> => {
   robotjs.moveMouse(
-    windowInfo.width * ATTACK_AND_ALL_ATTACK_BUTTON.x + windowInfo.x + 2,
+    windowInfo.width * ATTACK_AND_ALL_ATTACK_BUTTON.x +
+      windowInfo.x +
+      0.0013 * windowInfo.width,
     windowInfo.height * ATTACK_AND_ALL_ATTACK_BUTTON.y + windowInfo.y
   );
   robotjs.moveMouse(
