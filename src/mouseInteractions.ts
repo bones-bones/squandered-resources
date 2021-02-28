@@ -53,7 +53,18 @@ function buttonClickConstructor(button: {x: number; y: number}) {
     robotjs.mouseClick();
   };
 }
-export const clickAttack=async():Promise<void>=>await buttonClickConstructor(ATTACK_AND_ALL_ATTACK_BUTTON)();
+export const clickAttack = async (): Promise<void> => {
+  robotjs.moveMouse(
+    windowInfo.width * ATTACK_AND_ALL_ATTACK_BUTTON.x + windowInfo.x + 2,
+    windowInfo.height * ATTACK_AND_ALL_ATTACK_BUTTON.y + windowInfo.y
+  );
+  robotjs.moveMouse(
+    windowInfo.width * ATTACK_AND_ALL_ATTACK_BUTTON.x + windowInfo.x,
+    windowInfo.height * ATTACK_AND_ALL_ATTACK_BUTTON.y + windowInfo.y
+  );
+  await sleep();
+  robotjs.mouseClick();
+};
 
 export function clickOrderBlockers(): Promise<void> {
   return new Promise<void>(resolve => {

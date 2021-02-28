@@ -1,0 +1,879 @@
+{
+  "transactionId": "d2e88068-d1eb-4176-9ab9-81017b1e1c8e",
+  "timestamp": "637500812030997091",
+  "greToClientEvent": {
+    "greToClientMessages": [
+      {
+        "type": "GREMessageType_GameStateMessage",
+        "systemSeatIds": [1],
+        "msgId": 1098,
+        "gameStateId": 734,
+        "gameStateMessage": {
+          "type": "GameStateType_Diff",
+          "gameStateId": 734,
+          "turnInfo": {
+            "phase": "Phase_Main1",
+            "turnNumber": 26,
+            "activePlayer": 1,
+            "priorityPlayer": 1,
+            "decisionPlayer": 1,
+            "nextPhase": "Phase_Combat",
+            "nextStep": "Step_BeginCombat"
+          },
+          "annotations": [
+            {
+              "id": 1769,
+              "affectedIds": [1],
+              "type": ["AnnotationType_PhaseOrStepModified"],
+              "details": [
+                {
+                  "key": "phase",
+                  "type": "KeyValuePairValueType_int32",
+                  "valueInt32": [2]
+                },
+                {
+                  "key": "step",
+                  "type": "KeyValuePairValueType_int32",
+                  "valueInt32": [0]
+                }
+              ]
+            }
+          ],
+          "pendingMessageCount": 1,
+          "prevGameStateId": 733,
+          "timers": [
+            {
+              "timerId": 1,
+              "type": "TimerType_Inactivity",
+              "durationSec": 1020,
+              "running": true,
+              "behavior": "TimerBehavior_Timeout",
+              "warningThresholdSec": 990,
+              "elapsedMs": 1
+            },
+            {
+              "timerId": 2,
+              "type": "TimerType_Inactivity",
+              "durationSec": 1020,
+              "behavior": "TimerBehavior_Timeout",
+              "warningThresholdSec": 990
+            }
+          ],
+          "update": "GameStateUpdate_SendAndRecord",
+          "actions": [
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Cast",
+                "instanceId": 304,
+                "manaCost": [{"color": ["ManaColor_Green"], "count": 2}]
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Cast",
+                "instanceId": 521,
+                "manaCost": [{"color": ["ManaColor_Green"], "count": 1}]
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Cast",
+                "instanceId": 527,
+                "manaCost": [
+                  {"color": ["ManaColor_Generic"], "count": 3},
+                  {"color": ["ManaColor_Green"], "count": 1}
+                ]
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Cast",
+                "instanceId": 528,
+                "manaCost": [
+                  {"color": ["ManaColor_Generic"], "count": 2},
+                  {"color": ["ManaColor_Green"], "count": 1}
+                ]
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {"actionType": "ActionType_Play", "instanceId": 382}
+            },
+            {
+              "seatId": 1,
+              "action": {"actionType": "ActionType_Play", "instanceId": 439}
+            },
+            {
+              "seatId": 1,
+              "action": {"actionType": "ActionType_Play", "instanceId": 495}
+            },
+            {
+              "seatId": 1,
+              "action": {"actionType": "ActionType_Play", "instanceId": 504}
+            },
+            {
+              "seatId": 2,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1003,
+                "sourceId": 279
+              }
+            },
+            {
+              "seatId": 2,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1003,
+                "sourceId": 283
+              }
+            },
+            {
+              "seatId": 2,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1003,
+                "sourceId": 293
+              }
+            },
+            {
+              "seatId": 2,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1003,
+                "sourceId": 331
+              }
+            },
+            {
+              "seatId": 2,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1003,
+                "sourceId": 373
+              }
+            },
+            {
+              "seatId": 2,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1003,
+                "sourceId": 427
+              }
+            },
+            {
+              "seatId": 2,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1003,
+                "sourceId": 452
+              }
+            },
+            {
+              "seatId": 2,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1003,
+                "sourceId": 525
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1005,
+                "sourceId": 281
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1005,
+                "sourceId": 288
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1005,
+                "sourceId": 305
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1005,
+                "sourceId": 315
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1005,
+                "sourceId": 344
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1005,
+                "sourceId": 370
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1005,
+                "sourceId": 377
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1005,
+                "sourceId": 404
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1005,
+                "sourceId": 431
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1005,
+                "sourceId": 456
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1005,
+                "sourceId": 488
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 136096,
+                "sourceId": 405
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 136091,
+                "sourceId": 363
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "GREMessageType_ActionsAvailableReq",
+        "systemSeatIds": [1],
+        "msgId": 1099,
+        "gameStateId": 734,
+        "prompt": {"promptId": 2},
+        "actionsAvailableReq": {
+          "actions": [
+            {
+              "actionType": "ActionType_Cast",
+              "grpId": 70308,
+              "instanceId": 304,
+              "manaCost": [{"color": ["ManaColor_Green"], "count": 2}],
+              "shouldStop": true,
+              "autoTapSolution": {
+                "autoTapActions": [
+                  {
+                    "instanceId": 363,
+                    "abilityGrpId": 136091,
+                    "manaPaymentOption": {
+                      "mana": [
+                        {
+                          "manaId": 3363,
+                          "color": "ManaColor_Green",
+                          "srcInstanceId": 363,
+                          "specs": [{"type": "ManaSpecType_Predictive"}],
+                          "abilityGrpId": 136091
+                        },
+                        {
+                          "manaId": 3364,
+                          "color": "ManaColor_Green",
+                          "srcInstanceId": 363,
+                          "specs": [{"type": "ManaSpecType_Predictive"}],
+                          "abilityGrpId": 136091
+                        }
+                      ]
+                    },
+                    "costCategory": "CostCategory_Automatic"
+                  }
+                ]
+              },
+              "highlight": 1
+            },
+            {
+              "actionType": "ActionType_Cast",
+              "grpId": 75206,
+              "instanceId": 521,
+              "manaCost": [{"color": ["ManaColor_Green"], "count": 1}],
+              "shouldStop": true,
+              "targets": [
+                {
+                  "targetIdx": 2,
+                  "targets": [
+                    {"targetInstanceId": 332, "highlight": 2},
+                    {"targetInstanceId": 359, "highlight": 2}
+                  ]
+                },
+                {
+                  "targetIdx": 1,
+                  "targets": [
+                    {"targetInstanceId": 306, "highlight": 2},
+                    {"targetInstanceId": 316, "highlight": 2},
+                    {"targetInstanceId": 405, "highlight": 2},
+                    {"targetInstanceId": 411, "highlight": 2},
+                    {"targetInstanceId": 418, "highlight": 2},
+                    {"targetInstanceId": 432, "highlight": 2},
+                    {"targetInstanceId": 457, "highlight": 2},
+                    {"targetInstanceId": 464, "highlight": 2},
+                    {"targetInstanceId": 471, "highlight": 2},
+                    {"targetInstanceId": 489, "highlight": 2},
+                    {"targetInstanceId": 496, "highlight": 2},
+                    {"targetInstanceId": 505, "highlight": 2}
+                  ]
+                }
+              ],
+              "autoTapSolution": {
+                "autoTapActions": [
+                  {
+                    "instanceId": 281,
+                    "abilityGrpId": 1005,
+                    "manaPaymentOption": {
+                      "mana": [
+                        {
+                          "manaId": 3362,
+                          "color": "ManaColor_Green",
+                          "srcInstanceId": 281,
+                          "specs": [
+                            {"type": "ManaSpecType_Predictive"},
+                            {"type": "ManaSpecType_FromSnow"}
+                          ],
+                          "abilityGrpId": 1005
+                        }
+                      ]
+                    },
+                    "costCategory": "CostCategory_Automatic"
+                  }
+                ]
+              }
+            },
+            {
+              "actionType": "ActionType_Cast",
+              "grpId": 71984,
+              "instanceId": 527,
+              "manaCost": [
+                {"color": ["ManaColor_Generic"], "count": 3},
+                {"color": ["ManaColor_Green"], "count": 1}
+              ],
+              "shouldStop": true,
+              "manaPaymentConditions": [
+                {
+                  "colors": ["ManaColor_Green"],
+                  "specs": ["ManaSpecType_FromSnow"],
+                  "abilityGrpId": 140035,
+                  "type": "ManaPaymentConditionType_Threshold"
+                },
+                {
+                  "colors": ["ManaColor_Green"],
+                  "specs": ["ManaSpecType_FromSnow"],
+                  "abilityGrpId": 140035,
+                  "type": "ManaPaymentConditionType_Threshold"
+                },
+                {
+                  "colors": ["ManaColor_Green"],
+                  "specs": ["ManaSpecType_FromSnow"],
+                  "abilityGrpId": 140035,
+                  "type": "ManaPaymentConditionType_Threshold"
+                }
+              ],
+              "autoTapSolution": {
+                "autoTapActions": [
+                  {
+                    "instanceId": 281,
+                    "abilityGrpId": 1005,
+                    "manaPaymentOption": {
+                      "mana": [
+                        {
+                          "manaId": 3362,
+                          "color": "ManaColor_Green",
+                          "srcInstanceId": 281,
+                          "specs": [
+                            {"type": "ManaSpecType_Predictive"},
+                            {"type": "ManaSpecType_FromSnow"}
+                          ],
+                          "abilityGrpId": 1005
+                        }
+                      ]
+                    },
+                    "costCategory": "CostCategory_Automatic"
+                  },
+                  {
+                    "instanceId": 288,
+                    "abilityGrpId": 1005,
+                    "manaPaymentOption": {
+                      "mana": [
+                        {
+                          "manaId": 3361,
+                          "color": "ManaColor_Green",
+                          "srcInstanceId": 288,
+                          "specs": [
+                            {"type": "ManaSpecType_Predictive"},
+                            {"type": "ManaSpecType_FromSnow"}
+                          ],
+                          "abilityGrpId": 1005
+                        }
+                      ]
+                    },
+                    "costCategory": "CostCategory_Automatic"
+                  },
+                  {
+                    "instanceId": 363,
+                    "abilityGrpId": 136091,
+                    "manaPaymentOption": {
+                      "mana": [
+                        {
+                          "manaId": 3363,
+                          "color": "ManaColor_Green",
+                          "srcInstanceId": 363,
+                          "specs": [{"type": "ManaSpecType_Predictive"}],
+                          "abilityGrpId": 136091
+                        },
+                        {
+                          "manaId": 3364,
+                          "color": "ManaColor_Green",
+                          "srcInstanceId": 363,
+                          "specs": [{"type": "ManaSpecType_Predictive"}],
+                          "abilityGrpId": 136091
+                        }
+                      ]
+                    },
+                    "costCategory": "CostCategory_Automatic"
+                  }
+                ],
+                "manaPaymentConditions": [
+                  {
+                    "colors": ["ManaColor_Green"],
+                    "specs": ["ManaSpecType_FromSnow"],
+                    "abilityGrpId": 140035,
+                    "type": "ManaPaymentConditionType_Threshold"
+                  }
+                ]
+              }
+            },
+            {
+              "actionType": "ActionType_Cast",
+              "grpId": 75533,
+              "instanceId": 528,
+              "manaCost": [
+                {"color": ["ManaColor_Generic"], "count": 2},
+                {"color": ["ManaColor_Green"], "count": 1}
+              ],
+              "shouldStop": true,
+              "autoTapSolution": {
+                "autoTapActions": [
+                  {
+                    "instanceId": 281,
+                    "abilityGrpId": 1005,
+                    "manaPaymentOption": {
+                      "mana": [
+                        {
+                          "manaId": 3362,
+                          "color": "ManaColor_Green",
+                          "srcInstanceId": 281,
+                          "specs": [
+                            {"type": "ManaSpecType_Predictive"},
+                            {"type": "ManaSpecType_FromSnow"}
+                          ],
+                          "abilityGrpId": 1005
+                        }
+                      ]
+                    },
+                    "costCategory": "CostCategory_Automatic"
+                  },
+                  {
+                    "instanceId": 363,
+                    "abilityGrpId": 136091,
+                    "manaPaymentOption": {
+                      "mana": [
+                        {
+                          "manaId": 3363,
+                          "color": "ManaColor_Green",
+                          "srcInstanceId": 363,
+                          "specs": [{"type": "ManaSpecType_Predictive"}],
+                          "abilityGrpId": 136091
+                        },
+                        {
+                          "manaId": 3364,
+                          "color": "ManaColor_Green",
+                          "srcInstanceId": 363,
+                          "specs": [{"type": "ManaSpecType_Predictive"}],
+                          "abilityGrpId": 136091
+                        }
+                      ]
+                    },
+                    "costCategory": "CostCategory_Automatic"
+                  }
+                ]
+              }
+            },
+            {
+              "actionType": "ActionType_Play",
+              "grpId": 75336,
+              "instanceId": 382,
+              "shouldStop": true
+            },
+            {
+              "actionType": "ActionType_Play",
+              "grpId": 75336,
+              "instanceId": 439,
+              "shouldStop": true
+            },
+            {
+              "actionType": "ActionType_Play",
+              "grpId": 75336,
+              "instanceId": 495,
+              "shouldStop": true
+            },
+            {
+              "actionType": "ActionType_Play",
+              "grpId": 75336,
+              "instanceId": 504,
+              "shouldStop": true
+            },
+            {
+              "actionType": "ActionType_Activate_Mana",
+              "grpId": 75336,
+              "instanceId": 281,
+              "abilityGrpId": 1005,
+              "manaPaymentOptions": [
+                {
+                  "mana": [
+                    {
+                      "manaId": 3362,
+                      "color": "ManaColor_Green",
+                      "srcInstanceId": 281,
+                      "specs": [
+                        {"type": "ManaSpecType_Predictive"},
+                        {"type": "ManaSpecType_FromSnow"}
+                      ],
+                      "abilityGrpId": 1005
+                    }
+                  ]
+                }
+              ],
+              "maxActivations": 1,
+              "isBatchable": true
+            },
+            {
+              "actionType": "ActionType_Activate_Mana",
+              "grpId": 75336,
+              "instanceId": 288,
+              "abilityGrpId": 1005,
+              "manaPaymentOptions": [
+                {
+                  "mana": [
+                    {
+                      "manaId": 3361,
+                      "color": "ManaColor_Green",
+                      "srcInstanceId": 288,
+                      "specs": [
+                        {"type": "ManaSpecType_Predictive"},
+                        {"type": "ManaSpecType_FromSnow"}
+                      ],
+                      "abilityGrpId": 1005
+                    }
+                  ]
+                }
+              ],
+              "maxActivations": 1,
+              "isBatchable": true
+            },
+            {
+              "actionType": "ActionType_Activate_Mana",
+              "grpId": 75336,
+              "instanceId": 305,
+              "abilityGrpId": 1005,
+              "manaPaymentOptions": [
+                {
+                  "mana": [
+                    {
+                      "manaId": 3360,
+                      "color": "ManaColor_Green",
+                      "srcInstanceId": 305,
+                      "specs": [
+                        {"type": "ManaSpecType_Predictive"},
+                        {"type": "ManaSpecType_FromSnow"}
+                      ],
+                      "abilityGrpId": 1005
+                    }
+                  ]
+                }
+              ],
+              "maxActivations": 1,
+              "isBatchable": true
+            },
+            {
+              "actionType": "ActionType_Activate_Mana",
+              "grpId": 75336,
+              "instanceId": 315,
+              "abilityGrpId": 1005,
+              "manaPaymentOptions": [
+                {
+                  "mana": [
+                    {
+                      "manaId": 3359,
+                      "color": "ManaColor_Green",
+                      "srcInstanceId": 315,
+                      "specs": [
+                        {"type": "ManaSpecType_Predictive"},
+                        {"type": "ManaSpecType_FromSnow"}
+                      ],
+                      "abilityGrpId": 1005
+                    }
+                  ]
+                }
+              ],
+              "maxActivations": 1,
+              "isBatchable": true
+            },
+            {
+              "actionType": "ActionType_Activate_Mana",
+              "grpId": 75336,
+              "instanceId": 344,
+              "abilityGrpId": 1005,
+              "manaPaymentOptions": [
+                {
+                  "mana": [
+                    {
+                      "manaId": 3358,
+                      "color": "ManaColor_Green",
+                      "srcInstanceId": 344,
+                      "specs": [
+                        {"type": "ManaSpecType_Predictive"},
+                        {"type": "ManaSpecType_FromSnow"}
+                      ],
+                      "abilityGrpId": 1005
+                    }
+                  ]
+                }
+              ],
+              "maxActivations": 1,
+              "isBatchable": true
+            },
+            {
+              "actionType": "ActionType_Activate_Mana",
+              "grpId": 70308,
+              "instanceId": 363,
+              "abilityGrpId": 136091,
+              "manaPaymentOptions": [
+                {
+                  "mana": [
+                    {
+                      "manaId": 3363,
+                      "color": "ManaColor_Green",
+                      "srcInstanceId": 363,
+                      "specs": [{"type": "ManaSpecType_Predictive"}],
+                      "abilityGrpId": 136091
+                    },
+                    {
+                      "manaId": 3364,
+                      "color": "ManaColor_Green",
+                      "srcInstanceId": 363,
+                      "specs": [{"type": "ManaSpecType_Predictive"}],
+                      "abilityGrpId": 136091
+                    }
+                  ]
+                }
+              ],
+              "shouldStop": true,
+              "maxActivations": 1,
+              "isBatchable": true
+            },
+            {
+              "actionType": "ActionType_Activate_Mana",
+              "grpId": 75336,
+              "instanceId": 370,
+              "abilityGrpId": 1005,
+              "manaPaymentOptions": [
+                {
+                  "mana": [
+                    {
+                      "manaId": 3357,
+                      "color": "ManaColor_Green",
+                      "srcInstanceId": 370,
+                      "specs": [
+                        {"type": "ManaSpecType_Predictive"},
+                        {"type": "ManaSpecType_FromSnow"}
+                      ],
+                      "abilityGrpId": 1005
+                    }
+                  ]
+                }
+              ],
+              "maxActivations": 1,
+              "isBatchable": true
+            },
+            {
+              "actionType": "ActionType_Activate_Mana",
+              "grpId": 75336,
+              "instanceId": 377,
+              "abilityGrpId": 1005,
+              "manaPaymentOptions": [
+                {
+                  "mana": [
+                    {
+                      "manaId": 3356,
+                      "color": "ManaColor_Green",
+                      "srcInstanceId": 377,
+                      "specs": [
+                        {"type": "ManaSpecType_Predictive"},
+                        {"type": "ManaSpecType_FromSnow"}
+                      ],
+                      "abilityGrpId": 1005
+                    }
+                  ]
+                }
+              ],
+              "maxActivations": 1,
+              "isBatchable": true
+            },
+            {
+              "actionType": "ActionType_Activate_Mana",
+              "grpId": 75336,
+              "instanceId": 404,
+              "abilityGrpId": 1005,
+              "manaPaymentOptions": [
+                {
+                  "mana": [
+                    {
+                      "manaId": 3355,
+                      "color": "ManaColor_Green",
+                      "srcInstanceId": 404,
+                      "specs": [
+                        {"type": "ManaSpecType_Predictive"},
+                        {"type": "ManaSpecType_FromSnow"}
+                      ],
+                      "abilityGrpId": 1005
+                    }
+                  ]
+                }
+              ],
+              "maxActivations": 1,
+              "isBatchable": true
+            },
+            {
+              "actionType": "ActionType_Activate_Mana",
+              "grpId": 75336,
+              "instanceId": 431,
+              "abilityGrpId": 1005,
+              "manaPaymentOptions": [
+                {
+                  "mana": [
+                    {
+                      "manaId": 3354,
+                      "color": "ManaColor_Green",
+                      "srcInstanceId": 431,
+                      "specs": [
+                        {"type": "ManaSpecType_Predictive"},
+                        {"type": "ManaSpecType_FromSnow"}
+                      ],
+                      "abilityGrpId": 1005
+                    }
+                  ]
+                }
+              ],
+              "maxActivations": 1,
+              "isBatchable": true
+            },
+            {
+              "actionType": "ActionType_Activate_Mana",
+              "grpId": 75336,
+              "instanceId": 456,
+              "abilityGrpId": 1005,
+              "manaPaymentOptions": [
+                {
+                  "mana": [
+                    {
+                      "manaId": 3353,
+                      "color": "ManaColor_Green",
+                      "srcInstanceId": 456,
+                      "specs": [
+                        {"type": "ManaSpecType_Predictive"},
+                        {"type": "ManaSpecType_FromSnow"}
+                      ],
+                      "abilityGrpId": 1005
+                    }
+                  ]
+                }
+              ],
+              "maxActivations": 1,
+              "isBatchable": true
+            },
+            {
+              "actionType": "ActionType_Activate_Mana",
+              "grpId": 75336,
+              "instanceId": 488,
+              "abilityGrpId": 1005,
+              "manaPaymentOptions": [
+                {
+                  "mana": [
+                    {
+                      "manaId": 3352,
+                      "color": "ManaColor_Green",
+                      "srcInstanceId": 488,
+                      "specs": [
+                        {"type": "ManaSpecType_Predictive"},
+                        {"type": "ManaSpecType_FromSnow"}
+                      ],
+                      "abilityGrpId": 1005
+                    }
+                  ]
+                }
+              ],
+              "maxActivations": 1,
+              "isBatchable": true
+            },
+            {"actionType": "ActionType_Pass"},
+            {"actionType": "ActionType_FloatMana"}
+          ],
+          "inactiveActions": [
+            {
+              "actionType": "ActionType_Activate",
+              "grpId": 70313,
+              "instanceId": 405,
+              "abilityGrpId": 136096
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

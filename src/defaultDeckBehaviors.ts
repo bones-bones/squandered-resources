@@ -11,7 +11,7 @@ export const getLandToPlayDefault = (playableLands: PlayAction[]): number =>
 
 export const getCastOptimizingManaUsage = (
   availaibleActions: Action[]
-): number => {
+): number | undefined => {
   const playActions = actionsFilterByType<CastAction>(
     availaibleActions,
     ActionType.ActionType_Cast
@@ -33,6 +33,8 @@ export const getCastOptimizingManaUsage = (
       };
     }
   );
+  console.log(JSON.stringify(playables));
+
   // Exact mana usage
   for (let i = 0; i < playables.length; i++) {
     if (playables[i].manaValue == manaToWorkWith) {

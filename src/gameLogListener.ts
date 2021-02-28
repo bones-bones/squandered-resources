@@ -170,10 +170,10 @@ export const constructLogEventHandler = (
               }
               case 'GREMessageType_DeclareAttackersReq': {
                 console.log('entering Turn Them Sideways step');
-                await sleep(50);
+                await sleep(1000);
                 await clickAttack();
-                await sleep(50);
-                await clickAttack()
+                await sleep(500);
+                await clickAttack();
                 // const attackerMessage: DeclareAttackersReqMessage =
                 //   clientMessages[l];
                 break;
@@ -302,7 +302,7 @@ export const constructLogEventHandler = (
               case 'GREMessageType_SubmitAttackersResp': {
                 //TODO handle prompts
                 console.log('submit attackers response');
-                clickPass();
+                // clickPass();
                 break;
               }
               // case 'GREMessageType_GameStateMessage': {

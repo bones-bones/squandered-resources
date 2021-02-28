@@ -1,0 +1,574 @@
+{
+  "transactionId": "2fd3f76d-6daa-4d92-8980-c088d1fbb99f",
+  "timestamp": "637500812593343453",
+  "greToClientEvent": {
+    "greToClientMessages": [
+      {
+        "type": "GREMessageType_GameStateMessage",
+        "systemSeatIds": [1],
+        "msgId": 1100,
+        "gameStateId": 735,
+        "gameStateMessage": {
+          "type": "GameStateType_Diff",
+          "gameStateId": 735,
+          "zones": [
+            {
+              "zoneId": 27,
+              "type": "ZoneType_Stack",
+              "visibility": "Visibility_Public",
+              "objectInstanceIds": [529]
+            },
+            {
+              "zoneId": 30,
+              "type": "ZoneType_Limbo",
+              "visibility": "Visibility_Public",
+              "objectInstanceIds": [
+                521,
+                197,
+                196,
+                524,
+                237,
+                195,
+                515,
+                194,
+                470,
+                193,
+                480,
+                192,
+                487,
+                486,
+                191,
+                190,
+                392,
+                236,
+                189,
+                455,
+                188,
+                463,
+                187,
+                448,
+                454,
+                186,
+                185,
+                451,
+                235,
+                184,
+                440,
+                423,
+                183,
+                429,
+                430,
+                182,
+                181,
+                426,
+                234,
+                180,
+                417,
+                179,
+                410,
+                178,
+                402,
+                403,
+                177,
+                176,
+                378,
+                321,
+                395,
+                353,
+                391,
+                233,
+                385,
+                345,
+                225,
+                175,
+                375,
+                376,
+                174,
+                173,
+                372,
+                232,
+                362,
+                287,
+                314,
+                172,
+                356,
+                354,
+                339,
+                310,
+                231,
+                164,
+                343,
+                171,
+                325,
+                311,
+                294,
+                335,
+                282,
+                320,
+                330,
+                230,
+                324,
+                170,
+                301,
+                229,
+                160,
+                163,
+                169,
+                292,
+                228,
+                165,
+                161,
+                168,
+                299,
+                297,
+                219,
+                289,
+                284,
+                221,
+                224,
+                227,
+                162,
+                159,
+                167,
+                220,
+                223,
+                226,
+                280,
+                166,
+                222
+              ]
+            },
+            {
+              "zoneId": 31,
+              "type": "ZoneType_Hand",
+              "visibility": "Visibility_Private",
+              "ownerSeatId": 1,
+              "objectInstanceIds": [528, 527, 504, 495, 439, 382, 304],
+              "viewers": [1]
+            }
+          ],
+          "gameObjects": [
+            {
+              "instanceId": 521,
+              "grpId": 75206,
+              "type": "GameObjectType_Card",
+              "zoneId": 30,
+              "visibility": "Visibility_Private",
+              "ownerSeatId": 1,
+              "controllerSeatId": 1,
+              "superTypes": ["SuperType_Snow"],
+              "cardTypes": ["CardType_Sorcery"],
+              "color": ["CardColor_Green"],
+              "viewers": [1],
+              "name": 477539,
+              "abilities": [140034],
+              "overlayGrpId": 75206
+            },
+            {
+              "instanceId": 529,
+              "grpId": 75206,
+              "type": "GameObjectType_Card",
+              "zoneId": 27,
+              "visibility": "Visibility_Public",
+              "ownerSeatId": 1,
+              "controllerSeatId": 1,
+              "superTypes": ["SuperType_Snow"],
+              "cardTypes": ["CardType_Sorcery"],
+              "color": ["CardColor_Green"],
+              "name": 477539,
+              "abilities": [140034],
+              "overlayGrpId": 75206
+            }
+          ],
+          "annotations": [
+            {
+              "id": 1770,
+              "affectedIds": [521],
+              "type": ["AnnotationType_ObjectIdChanged"],
+              "details": [
+                {
+                  "key": "orig_id",
+                  "type": "KeyValuePairValueType_int32",
+                  "valueInt32": [521]
+                },
+                {
+                  "key": "new_id",
+                  "type": "KeyValuePairValueType_int32",
+                  "valueInt32": [529]
+                }
+              ]
+            },
+            {
+              "id": 1771,
+              "affectedIds": [529],
+              "type": ["AnnotationType_ZoneTransfer"],
+              "details": [
+                {
+                  "key": "zone_src",
+                  "type": "KeyValuePairValueType_int32",
+                  "valueInt32": [31]
+                },
+                {
+                  "key": "zone_dest",
+                  "type": "KeyValuePairValueType_int32",
+                  "valueInt32": [27]
+                },
+                {
+                  "key": "category",
+                  "type": "KeyValuePairValueType_string",
+                  "valueString": ["CastSpell"]
+                }
+              ]
+            }
+          ],
+          "pendingMessageCount": 1,
+          "prevGameStateId": 734,
+          "update": "GameStateUpdate_Send",
+          "actions": [
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Cast",
+                "instanceId": 304,
+                "manaCost": [{"color": ["ManaColor_Green"], "count": 2}]
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Cast",
+                "instanceId": 527,
+                "manaCost": [
+                  {"color": ["ManaColor_Generic"], "count": 3},
+                  {"color": ["ManaColor_Green"], "count": 1}
+                ]
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Cast",
+                "instanceId": 528,
+                "manaCost": [
+                  {"color": ["ManaColor_Generic"], "count": 2},
+                  {"color": ["ManaColor_Green"], "count": 1}
+                ]
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {"actionType": "ActionType_Play", "instanceId": 382}
+            },
+            {
+              "seatId": 1,
+              "action": {"actionType": "ActionType_Play", "instanceId": 439}
+            },
+            {
+              "seatId": 1,
+              "action": {"actionType": "ActionType_Play", "instanceId": 495}
+            },
+            {
+              "seatId": 1,
+              "action": {"actionType": "ActionType_Play", "instanceId": 504}
+            },
+            {
+              "seatId": 2,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1003,
+                "sourceId": 279
+              }
+            },
+            {
+              "seatId": 2,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1003,
+                "sourceId": 283
+              }
+            },
+            {
+              "seatId": 2,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1003,
+                "sourceId": 293
+              }
+            },
+            {
+              "seatId": 2,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1003,
+                "sourceId": 331
+              }
+            },
+            {
+              "seatId": 2,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1003,
+                "sourceId": 373
+              }
+            },
+            {
+              "seatId": 2,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1003,
+                "sourceId": 427
+              }
+            },
+            {
+              "seatId": 2,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1003,
+                "sourceId": 452
+              }
+            },
+            {
+              "seatId": 2,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1003,
+                "sourceId": 525
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1005,
+                "sourceId": 281
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1005,
+                "sourceId": 288
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1005,
+                "sourceId": 305
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1005,
+                "sourceId": 315
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1005,
+                "sourceId": 344
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1005,
+                "sourceId": 370
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1005,
+                "sourceId": 377
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1005,
+                "sourceId": 404
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1005,
+                "sourceId": 431
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1005,
+                "sourceId": 456
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 1005,
+                "sourceId": 488
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 136096,
+                "sourceId": 405
+              }
+            },
+            {
+              "seatId": 1,
+              "action": {
+                "actionType": "ActionType_Activate",
+                "abilityGrpId": 136091,
+                "sourceId": 363
+              }
+            }
+          ],
+          "persistentAnnotations": [
+            {
+              "id": 4,
+              "affectorId": 27,
+              "affectedIds": [529],
+              "type": ["AnnotationType_EnteredZoneThisTurn"]
+            }
+          ]
+        }
+      },
+      {
+        "type": "GREMessageType_SelectTargetsReq",
+        "systemSeatIds": [1],
+        "msgId": 1101,
+        "gameStateId": 735,
+        "prompt": {"promptId": 10},
+        "selectTargetsReq": {
+          "targets": [
+            {
+              "targetIdx": 1,
+              "targets": [
+                {
+                  "targetInstanceId": 306,
+                  "legalAction": "SelectAction_Select",
+                  "highlight": 2
+                },
+                {
+                  "targetInstanceId": 316,
+                  "legalAction": "SelectAction_Select",
+                  "highlight": 2
+                },
+                {
+                  "targetInstanceId": 405,
+                  "legalAction": "SelectAction_Select",
+                  "highlight": 2
+                },
+                {
+                  "targetInstanceId": 411,
+                  "legalAction": "SelectAction_Select",
+                  "highlight": 2
+                },
+                {
+                  "targetInstanceId": 418,
+                  "legalAction": "SelectAction_Select",
+                  "highlight": 2
+                },
+                {
+                  "targetInstanceId": 432,
+                  "legalAction": "SelectAction_Select",
+                  "highlight": 2
+                },
+                {
+                  "targetInstanceId": 457,
+                  "legalAction": "SelectAction_Select",
+                  "highlight": 2
+                },
+                {
+                  "targetInstanceId": 464,
+                  "legalAction": "SelectAction_Select",
+                  "highlight": 2
+                },
+                {
+                  "targetInstanceId": 471,
+                  "legalAction": "SelectAction_Select",
+                  "highlight": 2
+                },
+                {
+                  "targetInstanceId": 489,
+                  "legalAction": "SelectAction_Select",
+                  "highlight": 2
+                },
+                {
+                  "targetInstanceId": 496,
+                  "legalAction": "SelectAction_Select",
+                  "highlight": 2
+                },
+                {
+                  "targetInstanceId": 505,
+                  "legalAction": "SelectAction_Select",
+                  "highlight": 2
+                }
+              ],
+              "minTargets": 1,
+              "maxTargets": 1,
+              "prompt": {
+                "promptId": 5348,
+                "parameters": [
+                  {
+                    "parameterName": "CardId",
+                    "type": "ParameterType_Number",
+                    "numberValue": 529
+                  }
+                ]
+              }
+            },
+            {
+              "targetIdx": 2,
+              "targets": [
+                {
+                  "targetInstanceId": 332,
+                  "legalAction": "SelectAction_Select",
+                  "highlight": 2
+                },
+                {
+                  "targetInstanceId": 359,
+                  "legalAction": "SelectAction_Select",
+                  "highlight": 2
+                }
+              ],
+              "minTargets": 1,
+              "maxTargets": 1,
+              "prompt": {
+                "promptId": 5348,
+                "parameters": [
+                  {
+                    "parameterName": "CardId",
+                    "type": "ParameterType_Number",
+                    "numberValue": 529
+                  }
+                ]
+              }
+            }
+          ],
+          "sourceId": 529,
+          "abilityGrpId": 75206
+        },
+        "allowCancel": "AllowCancel_Abort",
+        "allowUndo": true
+      }
+    ]
+  }
+}

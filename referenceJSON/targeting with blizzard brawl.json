@@ -1,0 +1,123 @@
+{
+  "requestId": 545,
+  "clientToMatchServiceMessageType": "ClientToMatchServiceMessageType_ClientToGREMessage",
+  "timestamp": "637500812591607670",
+  "transactionId": "2fd3f76d-6daa-4d92-8980-c088d1fbb99f",
+  "payload": {
+    "type": "ClientMessageType_PerformActionResp",
+    "gameStateId": 734,
+    "respId": 1099,
+    "performActionResp": {
+      "actions": [
+        {
+          "actionType": "ActionType_Cast",
+          "grpId": 75206,
+          "instanceId": 521,
+          "manaCost": [
+            {
+              "color": ["ManaColor_Green"],
+              "count": 1
+            }
+          ],
+          "shouldStop": true,
+          "targets": [
+            {
+              "targetIdx": 2,
+              "targets": [
+                {
+                  "targetInstanceId": 332,
+                  "highlight": 2
+                },
+                {
+                  "targetInstanceId": 359,
+                  "highlight": 2
+                }
+              ]
+            },
+            {
+              "targetIdx": 1,
+              "targets": [
+                {
+                  "targetInstanceId": 306,
+                  "highlight": 2
+                },
+                {
+                  "targetInstanceId": 316,
+                  "highlight": 2
+                },
+                {
+                  "targetInstanceId": 405,
+                  "highlight": 2
+                },
+                {
+                  "targetInstanceId": 411,
+                  "highlight": 2
+                },
+                {
+                  "targetInstanceId": 418,
+                  "highlight": 2
+                },
+                {
+                  "targetInstanceId": 432,
+                  "highlight": 2
+                },
+                {
+                  "targetInstanceId": 457,
+                  "highlight": 2
+                },
+                {
+                  "targetInstanceId": 464,
+                  "highlight": 2
+                },
+                {
+                  "targetInstanceId": 471,
+                  "highlight": 2
+                },
+                {
+                  "targetInstanceId": 489,
+                  "highlight": 2
+                },
+                {
+                  "targetInstanceId": 496,
+                  "highlight": 2
+                },
+                {
+                  "targetInstanceId": 505,
+                  "highlight": 2
+                }
+              ]
+            }
+          ],
+          "autoTapSolution": {
+            "autoTapActions": [
+              {
+                "instanceId": 281,
+                "abilityGrpId": 1005,
+                "manaPaymentOption": {
+                  "mana": [
+                    {
+                      "manaId": 3362,
+                      "color": "ManaColor_Green",
+                      "srcInstanceId": 281,
+                      "specs": [
+                        {
+                          "type": "ManaSpecType_Predictive"
+                        },
+                        {
+                          "type": "ManaSpecType_FromSnow"
+                        }
+                      ],
+                      "abilityGrpId": 1005
+                    }
+                  ]
+                },
+                "costCategory": "CostCategory_Automatic"
+              }
+            ]
+          }
+        }
+      ],
+      "autoPassPriority": "AutoPassPriority_Yes"
+    }
+  }
+}
