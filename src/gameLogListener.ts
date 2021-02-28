@@ -1,5 +1,5 @@
 import fs from 'fs';
-import * as theActiveDeck from './constants/subHumanMonoGreen';
+import {theDeck} from './constants/subHumanMonoGreen';
 import {
   getActiveGameStates,
   getActivePlayerId,
@@ -16,33 +16,28 @@ import {
   PlayAction,
 } from './types';
 import {
+  clickAttack,
+  clickConfirmAssignDamage,
   clickConfirmButton,
   clickKeep,
   clickMulligan,
   clickOrderBlockers,
   clickPass,
-  
   playCardFromHand,
   sleep,
 } from './mouseInteractions';
+import {getHandAsText} from './handFunctions';
+import {
+  getCastOptimizingManaUsage,
+  getLandToPlayDefault,
+} from './defaultDeckBehaviors';
 
 export let gameObjects: {[key: string]: GameObject} = {};
 let userPlayerId: number;
 let trackedHand: number[] | undefined;
 let availaibleActions: Action[] = [];
 let handIsSorted = false;
-let cardsToAddToBackOfHand:number[]=[];
-
-function getValidPlays() {
-  const spellsToCast = availaibleActions.filter(action => {
-    return (
-      action.actionType == ActionType.ActionType_Cast &&
-      (action as CastAction).autoTapSolution
-    );
-  });
-  return spellsToCast;
-  //console.log(availaibleActions);
-}
+const cardsToAddToBackOfHand: number[] = [];
 
 export const constructLogEventHandler = (
   activeLogFile: string
@@ -106,7 +101,7 @@ export const constructLogEventHandler = (
                 await sleep(3000);
                 console.log('Mulligan Time');
                 console.log(`hand:`, trackedHand);
-                const keeper = theActiveDeck.isThisHandAKeeper();
+                const keeper = theDeck.keepHandCheck?.() || true;
                 if (keeper) {
                   clickKeep();
                 } else {
@@ -139,6 +134,11 @@ export const constructLogEventHandler = (
                 console.log('Starting player being determined');
                 break;
               }
+              case 'GREMessageType_AssignDamageReq': {
+                console.log('assigning combat damage');
+                clickConfirmAssignDamage();
+                break;
+              }
               case 'GREMessageType_SetSettingsResp': {
                 // probably does nothing
                 break;
@@ -151,12 +151,12 @@ export const constructLogEventHandler = (
                 clickPass();
                 break;
               }
-              case 'GREMessageType_OrderCombatDamageReq':{
+              case 'GREMessageType_OrderCombatDamageReq': {
                 console.log('assigning combat damage');
                 clickOrderBlockers();
                 break;
               }
-              case 'GREMessageType_SelectReplacementReq':{
+              case 'GREMessageType_SelectReplacementReq': {
                 console.log('select which replacement effect to apply');
                 break;
               }
@@ -170,23 +170,22 @@ export const constructLogEventHandler = (
               }
               case 'GREMessageType_DeclareAttackersReq': {
                 console.log('entering Turn Them Sideways step');
-                await sleep();
-                clickPass();
-
+                await sleep(1000);
+                await clickAttack();
+                await sleep(500);
+                await clickAttack();
                 // const attackerMessage: DeclareAttackersReqMessage =
                 //   clientMessages[l];
                 break;
               }
               case 'GREMessageType_ActionsAvailableReq': {
+                //TODO: create a main phase step
                 console.log('Getting available actions');
                 availaibleActions =
                   clientMessages[l].actionsAvailableReq.actions;
                 //code to sort hands by
                 if (availaibleActions.length > 0) {
                   if (!handIsSorted && trackedHand) {
-
-
-
                     const availableActionsThatArePlayableOrCastable = availaibleActions.filter(
                       aa => {
                         return (
@@ -204,38 +203,47 @@ export const constructLogEventHandler = (
                     );
 
                     if (availableActionsThatArePlayableOrCastable.length > 0) {
-                      console.log('before sorting',trackedHand
-                        .map((iid: number) => {
-                          return (
-                            theActiveDeck.cardList[
-                              `${gameObjects[iid].name}`
-                            ] || gameObjects[iid].name
-                          );
-                        })
-                        .join(', '))
-                      const handToSort = trackedHand.filter((iid:number)=>!cardsToAddToBackOfHand.includes(iid)).map(instanceId => {
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        return availableActionsThatArePlayableOrCastable.find(
-                          action => {
-                            return action.instanceId === instanceId;
-                          }
-                        )!;
-                      });
-                      
+                      console.log(
+                        'before sorting',
+                        trackedHand
+                          .map((iid: number) => {
+                            return (
+                              theDeck.cardMappings[
+                                `${gameObjects[iid].name}`
+                              ] || gameObjects[iid].name
+                            );
+                          })
+                          .join(', ')
+                      );
+                      const handToSort = trackedHand
+                        .filter(
+                          (iid: number) => !cardsToAddToBackOfHand.includes(iid)
+                        )
+                        .map(instanceId => {
+                          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                          return availableActionsThatArePlayableOrCastable.find(
+                            ({instanceId: playableActionInstanceId}) =>
+                              playableActionInstanceId === instanceId
+                          )!;
+                        });
+
                       const sortedHand = handToSort.sort(sortInHand);
 
-                      console.log('after sorting',trackedHand
-                        .map((iid: number) => {
-                          return (
-                            theActiveDeck.cardList[
-                              `${gameObjects[iid].name}`
-                            ] || gameObjects[iid].name
-                          );
-                        })
-                        .join(', '))
-                      trackedHand = sortedHand.map(
-                        ({instanceId}) => instanceId
-                      ).concat(cardsToAddToBackOfHand);
+                      console.log(
+                        'after sorting',
+                        trackedHand
+                          .map((iid: number) => {
+                            return (
+                              theDeck.cardMappings[
+                                `${gameObjects[iid].name}`
+                              ] || gameObjects[iid].name
+                            );
+                          })
+                          .join(', ')
+                      );
+                      trackedHand = sortedHand
+                        .map(({instanceId}) => instanceId)
+                        .concat(cardsToAddToBackOfHand);
 
                       handIsSorted = true;
                     }
@@ -247,38 +255,39 @@ export const constructLogEventHandler = (
                 const handSize = trackedHand?.length;
 
                 //LET'S PLAY A LAND MY DUDES
-                const landToPlay = availaibleActions.find(
-                  ({actionType}) => actionType === ActionType.ActionType_Play
-                );
-                await sleep(4000);
-                if (landToPlay) {
-                  const landiid = (landToPlay as PlayAction).instanceId;
-                  const landIndex = trackedHand?.indexOf(landiid);
-                  const humanLandIndex = landIndex as number;
-                  console.log(
-                    `it is the ${humanLandIndex} index of ${handSize} cards`
-                  );
-                  playCardFromHand(humanLandIndex, handSize!);
-                } else {
-                  const castableSpells = (availaibleActions.filter(aa => {
-                    return (
-                      (aa as InstanceAction).instanceId !== undefined &&
-                      ActionType.ActionType_Cast == aa.actionType
-                    );
-                  }) as InstanceAction[]).filter(entry => {
-                    return (entry as CastAction).autoTapSolution;
-                  }) as CastAction[];
+                await sleep(3000);
 
-                  const playAbleCreatures = castableSpells;
-                  if (playAbleCreatures.length > 0) {
-                    const playAbleCreatureIndex = trackedHand?.indexOf(
-                      playAbleCreatures[0].instanceId
+                const playableLands = availaibleActions.filter(
+                  ({actionType}) => actionType === ActionType.ActionType_Play
+                ) as PlayAction[];
+
+                if (playableLands.length > 0) {
+                  const iidOfLand =
+                    theDeck.getLandToPlay?.() ||
+                    getLandToPlayDefault(playableLands);
+                  const landIndex = trackedHand?.indexOf(iidOfLand) as number;
+
+                  playCardFromHand(landIndex, handSize!);
+                } else {
+                  // const castableSpells = (availaibleActions.filter(
+                  //   aa =>
+                  //     (aa as InstanceAction).instanceId !== undefined &&
+                  //     ActionType.ActionType_Cast == aa.actionType
+                  // ) as InstanceAction[]).filter(
+                  //   entry => (entry as CastAction).autoTapSolution
+                  // ) as CastAction[];
+
+                  // const playAbleCreatures = castableSpells;
+                  const iidToCast = getCastOptimizingManaUsage(
+                    availaibleActions
+                  );
+
+                  if (iidToCast) {
+                    const playableCardIndex = trackedHand?.indexOf(
+                      iidToCast
                     ) as number;
 
-                    console.log(
-                      `it is the ${playAbleCreatureIndex}th of ${handSize} cards`
-                    );
-                    playCardFromHand(playAbleCreatureIndex, handSize!);
+                    playCardFromHand(playableCardIndex, handSize!);
                   } else {
                     clickPass();
                   }
@@ -293,7 +302,7 @@ export const constructLogEventHandler = (
               case 'GREMessageType_SubmitAttackersResp': {
                 //TODO handle prompts
                 console.log('submit attackers response');
-                clickPass();
+                // clickPass();
                 break;
               }
               // case 'GREMessageType_GameStateMessage': {
@@ -304,7 +313,6 @@ export const constructLogEventHandler = (
 
               default: {
                 console.log('Default Case');
-                getValidPlays();
 
                 const states = getActiveGameStates(responseJSON);
                 if (!userPlayerId) {
@@ -332,25 +340,11 @@ export const constructLogEventHandler = (
                 const newHand = getPlayerHand(userPlayerId, clientMessages[l]);
                 i;
                 if (newHand && newHand.length > 0) {
-                  console.log(newHand, 'is the new hand');
                   if (trackedHand === undefined) {
                     // const sortedNewHand = newHand.map(instanceId => gameObjects[instanceId]);
                     // console.log('hand', sortedNewHand)
                     trackedHand = newHand;
                   } else if (trackedHand !== undefined) {
-
-                    console.log(
-                      'previous hand is ',
-                      trackedHand
-                        .map((iid: number) => {
-                          return (
-                            theActiveDeck.cardList[
-                              `${gameObjects[iid].name}`
-                            ] || gameObjects[iid].name
-                          );
-                        })
-                        .join(', ')
-                    );
                     const trackedHandFilteredByNewHand = trackedHand.filter(
                       entry => newHand.includes(entry)
                     );
@@ -361,8 +355,8 @@ export const constructLogEventHandler = (
                         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         !trackedHand!.includes(entry)
                     );
-                    if(!handIsSorted){
-                      cardsToAddToBackOfHand.concat(newCardsInHand)
+                    if (!handIsSorted) {
+                      cardsToAddToBackOfHand.concat(newCardsInHand);
                     }
                     const reversedNewCards = newCardsInHand.reverse();
                     trackedHand = trackedHandFilteredByNewHand.concat(
@@ -370,15 +364,11 @@ export const constructLogEventHandler = (
                     );
                     console.log(
                       'new hand is ',
-                      trackedHand
-                        .map((iid: number) => {
-                          return (
-                            theActiveDeck.cardList[
-                              `${gameObjects[iid].name}`
-                            ] || gameObjects[iid].name
-                          );
-                        })
-                        .join(', ')
+                      getHandAsText({
+                        hand: trackedHand,
+                        gameObjects,
+                        deck: theDeck,
+                      })
                     );
                   }
                 }
