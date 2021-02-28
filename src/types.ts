@@ -19,6 +19,8 @@ export interface GameObject {
 // TODO: flesh this out with all the decision points a deck will have
 export interface Deck {
   keepHandCheck?: () => boolean;
+  cardMappings: {[key: string]: string};
+  getLandToPlay?: () => void;
 }
 
 enum CardType {
