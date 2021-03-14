@@ -9,3 +9,19 @@ These are things a user _actually_ can do
 ## bugs
 
 So the big problem is that it mostly works at 11xx X 6xx resolutions. Need to retest the coords at a bigger window size
+
+# land zone
+
+the window is 1600 wide, 928 tall and at the position 96,50
+150, 725
+780, 725
+
+28 is the bar
+
+54, 675
+684, 675
+
++28
+0.03375, 0.6972
+
+0.4275, 0.6972

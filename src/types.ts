@@ -20,9 +20,28 @@ export interface GameObject {
 export interface Deck {
   keepHandCheck?: () => boolean;
   cardMappings: {[key: string]: string};
-  getLandToPlay?: () => void;
+  getLandToPlay?: () => number;
+  getAbilityToActivate?: (
+    choiceInfo: ActionChoiceInput
+  ) => InstanceAndLocation | undefined;
 }
 
+export interface GameObjects {
+  [key: string]: GameObject;
+}
+export interface ActionChoiceInput {
+  actions: ActivateAction[];
+  gameObjects: GameObjects;
+}
+
+export interface InstanceAndLocation {
+  instanceId: number;
+  location: FieldLocation;
+}
+
+export enum FieldLocation {
+  Land = 'Land',
+}
 enum CardType {
   CardType_Creature = 'CardType_Creature',
 }
@@ -46,6 +65,7 @@ export enum ActionType {
   ActionType_Activate_Mana = 'ActionType_Activate_Mana',
   ActionType_Pass = 'ActionType_Pass',
   ActionType_FloatMana = 'ActionType_FloatMana',
+  ActionType_Activate = 'ActionType_Activate',
 }
 
 export interface PassAction extends Action {
@@ -58,6 +78,12 @@ export interface FloatMana extends Action {
 
 export interface InstanceAction extends Action {
   instanceId: number;
+}
+export interface ActivateAction extends InstanceAction {
+  actionType: ActionType.ActionType_Activate_Mana;
+  grpId: number;
+  abilityGrpId: number;
+  shouldStop: boolean;
 }
 export interface ActivateMana extends InstanceAction {
   actionType: ActionType.ActionType_Activate_Mana;

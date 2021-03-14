@@ -1,8 +1,12 @@
 import {
   Action,
+  ActionChoiceInput,
   ActionType,
+  ActivateAction,
   ActivateMana,
   CastAction,
+  FieldLocation,
+  InstanceAndLocation,
   PlayAction,
 } from './types';
 
@@ -58,10 +62,34 @@ export const getCastOptimizingManaUsage = (
   return sortedPlayablesDescending[0].instanceId;
 };
 
-function actionsFilterByType<T extends Action>(
+export function actionsFilterByType<T extends Action>(
   actions: Action[],
   type: ActionType
 ): T[] {
   // wow i'm really bad at TS. I'm sorry, austin
   return (actions as any).filter(({actionType}: any) => actionType == type);
 }
+
+export const getAbilityToActivateDefault: (
+  choiceInfo: ActionChoiceInput
+) => InstanceAndLocation | undefined = choiceInfo => {
+  const abilitiesToUse = choiceInfo.actions.filter(entry => {
+    return genericActivatableActions[`${entry.abilityGrpId}`];
+  });
+
+  const abilitiesWithLocation = abilitiesToUse.map(entry =>
+    genericActivatableActions[`${entry.abilityGrpId}`](entry)
+  );
+
+  return abilitiesWithLocation[0];
+};
+
+const genericActivatableActions: {
+  [key: string]: (ability: ActivateAction) => InstanceAndLocation;
+} = {
+  '136225': ability => {
+    //Fabeled Passage
+
+    return {instanceId: ability.instanceId, location: FieldLocation.Land};
+  },
+};

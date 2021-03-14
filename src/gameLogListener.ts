@@ -10,6 +10,7 @@ import {
 import {
   Action,
   ActionType,
+  ActivateAction,
   CastAction,
   GameObject,
   InstanceAction,
@@ -19,6 +20,7 @@ import {
   clickAttack,
   clickConfirmAssignDamage,
   clickConfirmButton,
+  clickInstanceInLocation,
   clickKeep,
   clickMulligan,
   clickOrderBlockers,
@@ -28,9 +30,12 @@ import {
 } from './mouseInteractions';
 import {getHandAsText} from './handFunctions';
 import {
+  actionsFilterByType,
+  getAbilityToActivateDefault,
   getCastOptimizingManaUsage,
   getLandToPlayDefault,
 } from './defaultDeckBehaviors';
+import {escapeRegExp, LAME_ERROR} from './constants/logStrings';
 
 export let gameObjects: {[key: string]: GameObject} = {};
 let userPlayerId: number;
@@ -67,8 +72,28 @@ export const constructLogEventHandler = (
     if (newValue.includes('Event.MatchCreated')) {
       console.log('Match has been created!');
       gameObjects = {};
-    }
-    if (newValue.includes('GREMessageType_GameStateMessage')) {
+    } else if (
+      newValue.includes('ClientToMatchServiceMessageType_ClientToGREUIMessage')
+    ) {
+      const filteredLog = newValue.replace(
+        new RegExp(escapeRegExp(LAME_ERROR), 'g'),
+        ''
+      );
+      const logMinusUnityMessage = filteredLog.replace(
+        /\[UnityCrossThreadLogger\].*/g,
+        ''
+      );
+      console.log('∆∆∆', logMinusUnityMessage, '∆∆');
+      const jsonRegExp = new RegExp(/^{.*(\n .*)*\n}$/, 'gm');
+      const jsonActions = [];
+      let temp = jsonRegExp.exec(logMinusUnityMessage);
+      while (temp) {
+        jsonActions.push(temp);
+        temp = jsonRegExp.exec(logMinusUnityMessage);
+      }
+
+      //TODO write code
+    } else if (newValue.includes('GREMessageType_GameStateMessage')) {
       console.log('Game State Event!');
       const ingestedLogs = newValue.split('\n');
       const entriesThatICareAbout = ingestedLogs.filter(
@@ -175,7 +200,7 @@ export const constructLogEventHandler = (
                 await sleep(500);
                 await clickAttack();
                 // const attackerMessage: DeclareAttackersReqMessage =
-                //   clientMessages[l];
+                // clientMessages[l];
                 break;
               }
               case 'GREMessageType_ActionsAvailableReq': {
@@ -201,19 +226,14 @@ export const constructLogEventHandler = (
                       availableActionsThatArePlayableOrCastable,
                       'availaible actions'
                     );
-
                     if (availableActionsThatArePlayableOrCastable.length > 0) {
                       console.log(
                         'before sorting',
-                        trackedHand
-                          .map((iid: number) => {
-                            return (
-                              theDeck.cardMappings[
-                                `${gameObjects[iid].name}`
-                              ] || gameObjects[iid].name
-                            );
-                          })
-                          .join(', ')
+                        getHandAsText({
+                          hand: trackedHand,
+                          gameObjects,
+                          deck: theDeck,
+                        })
                       );
                       const handToSort = trackedHand
                         .filter(
@@ -226,20 +246,14 @@ export const constructLogEventHandler = (
                               playableActionInstanceId === instanceId
                           )!;
                         });
-
                       const sortedHand = handToSort.sort(sortInHand);
-
                       console.log(
                         'after sorting',
-                        trackedHand
-                          .map((iid: number) => {
-                            return (
-                              theDeck.cardMappings[
-                                `${gameObjects[iid].name}`
-                              ] || gameObjects[iid].name
-                            );
-                          })
-                          .join(', ')
+                        getHandAsText({
+                          hand: trackedHand,
+                          gameObjects,
+                          deck: theDeck,
+                        })
                       );
                       trackedHand = sortedHand
                         .map(({instanceId}) => instanceId)
@@ -257,9 +271,20 @@ export const constructLogEventHandler = (
                 //LET'S PLAY A LAND MY DUDES
                 await sleep(3000);
 
-                const playableLands = availaibleActions.filter(
-                  ({actionType}) => actionType === ActionType.ActionType_Play
-                ) as PlayAction[];
+                const playableLands = actionsFilterByType<PlayAction>(
+                  availaibleActions,
+                  ActionType.ActionType_Play
+                );
+
+                const castActions = actionsFilterByType<CastAction>(
+                  availaibleActions,
+                  ActionType.ActionType_Cast
+                );
+
+                const activateAbleAbilities = actionsFilterByType<ActivateAction>(
+                  availaibleActions,
+                  ActionType.ActionType_Activate
+                );
 
                 if (playableLands.length > 0) {
                   const iidOfLand =
@@ -268,26 +293,29 @@ export const constructLogEventHandler = (
                   const landIndex = trackedHand?.indexOf(iidOfLand) as number;
 
                   playCardFromHand(landIndex, handSize!);
-                } else {
-                  // const castableSpells = (availaibleActions.filter(
-                  //   aa =>
-                  //     (aa as InstanceAction).instanceId !== undefined &&
-                  //     ActionType.ActionType_Cast == aa.actionType
-                  // ) as InstanceAction[]).filter(
-                  //   entry => (entry as CastAction).autoTapSolution
-                  // ) as CastAction[];
-
-                  // const playAbleCreatures = castableSpells;
+                } else if (castActions.length > 0) {
                   const iidToCast = getCastOptimizingManaUsage(
                     availaibleActions
                   );
-
                   if (iidToCast) {
                     const playableCardIndex = trackedHand?.indexOf(
                       iidToCast
                     ) as number;
 
                     playCardFromHand(playableCardIndex, handSize!);
+                  } else if (activateAbleAbilities.length > 0) {
+                    const thingToDo =
+                      theDeck.getAbilityToActivate?.({
+                        actions: activateAbleAbilities,
+                        gameObjects,
+                      }) ||
+                      getAbilityToActivateDefault({
+                        actions: activateAbleAbilities,
+                        gameObjects,
+                      });
+                    if (thingToDo) {
+                      clickInstanceInLocation(thingToDo, gameObjects);
+                    }
                   } else {
                     clickPass();
                   }
@@ -300,7 +328,6 @@ export const constructLogEventHandler = (
                 break;
               }
               case 'GREMessageType_SubmitAttackersResp': {
-                //TODO handle prompts
                 console.log('submit attackers response');
                 // clickPass();
                 break;
@@ -313,7 +340,6 @@ export const constructLogEventHandler = (
 
               default: {
                 console.log('Default Case');
-
                 const states = getActiveGameStates(responseJSON);
                 if (!userPlayerId) {
                   userPlayerId = getActivePlayerId(states[0]);
