@@ -6,6 +6,50 @@ import {
 
 let windowInfo: ArenaWindowInfo;
 
+const ATTACK_AND_ALL_ATTACK_BUTTON = {
+  x: 0.94,
+  y: 0.88,
+};
+
+const MULLIGAN_BUTTON = {
+  x: 0.4,
+  y: 0.81,
+};
+const KEEP_BUTTON = {
+  x: 0.59,
+  y: 0.81,
+};
+
+const PASS_BUTTON = {
+  x: 0.94,
+  y: 0.88,
+};
+
+const ASSIGN_DAMAGE = { x: 0.5, y: 0.81 };
+
+// const LEFTMOST_CARD = {x: 0.14, y: 0.98};
+
+const CENTER_FIELD = {
+  x: 0.51,
+  y: 0.58,
+};
+
+const PLAY_BUTTON = {
+  x: 0.91,
+  y: 0.93,
+};
+
+const ORDER_BLOCKERS_BUTTON = { x: 0.5, y: 0.81 };
+const buttonClickConstructor = (button: { x: number; y: number }, sleepTime = 100) => {
+  return async () => {
+    robotjs.moveMouse(
+      windowInfo.width * button.x + windowInfo.x,
+      windowInfo.height * button.y + windowInfo.y
+    );
+    await sleep(sleepTime);
+    robotjs.mouseClick();
+  };
+}
 export function setWindowInfo(): Promise<void> {
   return new Promise<void>(resolve => {
     getArenaSizeAndPosition().then(mtgaWindowInfo => {
@@ -39,25 +83,14 @@ export function clickConfirmButton(): Promise<void> {
     resolve();
   });
 }
-export async function clickPass(): Promise<void> {
-  await buttonClickConstructor(PASS_BUTTON)();
-}
+export const clickPass = buttonClickConstructor(PASS_BUTTON);
 
-function buttonClickConstructor(button: {x: number; y: number}) {
-  return async () => {
-    robotjs.moveMouse(
-      windowInfo.width * button.x + windowInfo.x,
-      windowInfo.height * button.y + windowInfo.y
-    );
-    await sleep(100);
-    robotjs.mouseClick();
-  };
-}
+
 export const clickAttack = async (): Promise<void> => {
   robotjs.moveMouse(
     windowInfo.width * ATTACK_AND_ALL_ATTACK_BUTTON.x +
-      windowInfo.x +
-      0.0013 * windowInfo.width,
+    windowInfo.x +
+    0.0013 * windowInfo.width, // This is a slight offset because arena won't let you stupidclick into combat
     windowInfo.height * ATTACK_AND_ALL_ATTACK_BUTTON.y + windowInfo.y
   );
   robotjs.moveMouse(
@@ -68,34 +101,14 @@ export const clickAttack = async (): Promise<void> => {
   robotjs.mouseClick();
 };
 
-export function clickOrderBlockers(): Promise<void> {
-  return new Promise<void>(resolve => {
-    robotjs.moveMouse(
-      windowInfo.width * ORDER_BLOCKERS_BUTTON.x + windowInfo.x,
-      windowInfo.height * ORDER_BLOCKERS_BUTTON.y + windowInfo.y
-    );
-    setTimeout(() => {
-      robotjs.mouseClick();
-      resolve();
-    }, 1000);
-  });
-}
+export const clickOrderBlockers = buttonClickConstructor(ORDER_BLOCKERS_BUTTON, 1000);
+
 
 export const clickConfirmAssignDamage = async (): Promise<void> =>
   await buttonClickConstructor(ASSIGN_DAMAGE)();
 
-export function clickKeep(): Promise<void> {
-  return new Promise<void>(resolve => {
-    robotjs.moveMouse(
-      windowInfo.width * KEEP_BUTTON.x + windowInfo.x,
-      windowInfo.height * KEEP_BUTTON.y + windowInfo.y
-    );
-    setTimeout(() => {
-      robotjs.mouseClick();
-      resolve();
-    }, 1000);
-  });
-}
+export const clickKeep = buttonClickConstructor(KEEP_BUTTON, 1000);
+
 
 export function playCardFromHand(
   cardIndex: number,
@@ -108,10 +121,10 @@ export function playCardFromHand(
   return new Promise<void>(async resolve => {
     robotjs.moveMouse(
       1 +
-        windowInfo.width / 2 +
-        windowInfo.x -
-        cardsInHand * (0.04 * windowInfo.width) +
-        cardIndex * (0.09 * windowInfo.width),
+      windowInfo.width / 2 +
+      windowInfo.x -
+      cardsInHand * (0.04 * windowInfo.width) +
+      cardIndex * (0.09 * windowInfo.width),
       windowInfo.height + windowInfo.y - 1
     );
     await sleep(300);
@@ -148,38 +161,3 @@ export function clickMulligan(): Promise<void> {
     }, 4000);
   });
 }
-
-const ATTACK_AND_ALL_ATTACK_BUTTON = {
-  x: 0.94,
-  y: 0.88,
-};
-
-const MULLIGAN_BUTTON = {
-  x: 0.4,
-  y: 0.81,
-};
-const KEEP_BUTTON = {
-  x: 0.59,
-  y: 0.81,
-};
-
-const PASS_BUTTON = {
-  x: 0.94,
-  y: 0.88,
-};
-
-const ASSIGN_DAMAGE = {x: 0.5, y: 0.81};
-
-// const LEFTMOST_CARD = {x: 0.14, y: 0.98};
-
-const CENTER_FIELD = {
-  x: 0.51,
-  y: 0.58,
-};
-
-const PLAY_BUTTON = {
-  x: 0.91,
-  y: 0.93,
-};
-
-const ORDER_BLOCKERS_BUTTON = {x: 0.5, y: 0.81};
