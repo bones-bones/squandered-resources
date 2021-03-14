@@ -3,7 +3,7 @@ import {
   ArenaWindowInfo,
   getArenaSizeAndPosition,
 } from './stubsOfCode/macSystemInterface';
-import {GameObjects, InstanceAndLocation} from './types';
+import { GameObjects, InstanceAndLocation } from './types';
 
 let windowInfo: ArenaWindowInfo;
 
@@ -26,9 +26,7 @@ const PASS_BUTTON = {
   y: 0.88,
 };
 
-const ASSIGN_DAMAGE = {x: 0.5, y: 0.81};
-
-// const LEFTMOST_CARD = {x: 0.14, y: 0.98};
+const ASSIGN_DAMAGE = { x: 0.5, y: 0.81 };
 
 const CENTER_FIELD = {
   x: 0.51,
@@ -40,9 +38,9 @@ const PLAY_BUTTON = {
   y: 0.93,
 };
 
-const ORDER_BLOCKERS_BUTTON = {x: 0.5, y: 0.81};
+const ORDER_BLOCKERS_BUTTON = { x: 0.5, y: 0.81 };
 const buttonClickConstructor = (
-  button: {x: number; y: number},
+  button: { x: number; y: number },
   sleepTime = 100
 ) => {
   return async () => {
@@ -99,8 +97,8 @@ export const clickInstanceInLocation = async (
 export const clickAttack = async (): Promise<void> => {
   robotjs.moveMouse(
     windowInfo.width * ATTACK_AND_ALL_ATTACK_BUTTON.x +
-      windowInfo.x +
-      0.0013 * windowInfo.width, // This is a slight offset because arena won't let you stupidclick into combat
+    windowInfo.x +
+    0.0013 * windowInfo.width, // This is a slight offset because arena won't let you stupidclick into combat
     windowInfo.height * ATTACK_AND_ALL_ATTACK_BUTTON.y + windowInfo.y
   );
   robotjs.moveMouse(
@@ -132,10 +130,10 @@ export function playCardFromHand(
   return new Promise<void>(async resolve => {
     robotjs.moveMouse(
       1 +
-        windowInfo.width / 2 +
-        windowInfo.x -
-        cardsInHand * (0.04 * windowInfo.width) +
-        cardIndex * (0.09 * windowInfo.width),
+      windowInfo.width / 2 +
+      windowInfo.x -
+      cardsInHand * (0.04 * windowInfo.width) +
+      cardIndex * (0.09 * windowInfo.width),
       windowInfo.height + windowInfo.y - 1
     );
     await sleep(300);
