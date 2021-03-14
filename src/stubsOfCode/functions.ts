@@ -29,12 +29,8 @@ export function getPlayerHand(
     activeState.gameStateMessage.zones
   ) {
     const handInstances = activeState.gameStateMessage.zones.find(
-      (zoneEntry: any) => {
-        return (
-          zoneEntry.ownerSeatId == playerId &&
-          zoneEntry.type === 'ZoneType_Hand'
-        );
-      }
+      (zoneEntry: any) =>
+        zoneEntry.ownerSeatId == playerId && zoneEntry.type === 'ZoneType_Hand'
     )?.objectInstanceIds;
 
     if (!handInstances) {

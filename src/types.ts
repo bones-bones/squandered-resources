@@ -302,3 +302,18 @@ export interface MulliganRequest {
   };
   mulliganReq: {mulliganType: 'MulliganType_London'};
 }
+//ClientMessageType_UIMessage
+export interface UIMessage {
+  requestId: number;
+  clientToMatchServiceMessageType: string;
+  timestamp: string;
+  transactionId: string;
+  payload: {
+    type: string;
+    systemSeatId: 0 | 1;
+    uiMessage: {
+      seatIds: number[];
+      onHover: {objectId?: number};
+    };
+  };
+}

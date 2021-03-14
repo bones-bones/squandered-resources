@@ -15,6 +15,7 @@ import {
   GameObject,
   InstanceAction,
   PlayAction,
+  UIMessage,
 } from './types';
 import {
   clickAttack,
@@ -43,6 +44,7 @@ let trackedHand: number[] | undefined;
 let availaibleActions: Action[] = [];
 let handIsSorted = false;
 const cardsToAddToBackOfHand: number[] = [];
+let activeHoveredCard: number | undefined = undefined;
 
 export const constructLogEventHandler = (
   activeLogFile: string
@@ -83,16 +85,29 @@ export const constructLogEventHandler = (
         /\[UnityCrossThreadLogger\].*/g,
         ''
       );
-      console.log('∆∆∆', logMinusUnityMessage, '∆∆');
       const jsonRegExp = new RegExp(/^{.*(\n .*)*\n}$/, 'gm');
-      const jsonActions = [];
+      const jsonEvents = [];
       let temp = jsonRegExp.exec(logMinusUnityMessage);
       while (temp) {
-        jsonActions.push(temp);
+        jsonEvents.push(temp[0]);
         temp = jsonRegExp.exec(logMinusUnityMessage);
       }
 
-      //TODO write code
+      const parsedEvents: UIMessage[] = jsonEvents.map(entry =>
+        JSON.parse(entry)
+      );
+      parsedEvents.forEach(
+        ({
+          payload: {
+            uiMessage: {onHover},
+          },
+        }) => {
+          activeHoveredCard = onHover.objectId;
+        }
+      );
+      console.log('now hovering over: ', activeHoveredCard);
+
+      //TODO write code here
     } else if (newValue.includes('GREMessageType_GameStateMessage')) {
       console.log('Game State Event!');
       const ingestedLogs = newValue.split('\n');
@@ -212,15 +227,13 @@ export const constructLogEventHandler = (
                 if (availaibleActions.length > 0) {
                   if (!handIsSorted && trackedHand) {
                     const availableActionsThatArePlayableOrCastable = availaibleActions.filter(
-                      aa => {
-                        return (
-                          (aa as InstanceAction).instanceId !== undefined &&
-                          [
-                            ActionType.ActionType_Play,
-                            ActionType.ActionType_Cast,
-                          ].includes(aa.actionType)
-                        );
-                      }
+                      availableAction =>
+                        (availableAction as InstanceAction).instanceId !==
+                          undefined &&
+                        [
+                          ActionType.ActionType_Play,
+                          ActionType.ActionType_Cast,
+                        ].includes(availableAction.actionType)
                     ) as InstanceAction[];
                     console.log(
                       availableActionsThatArePlayableOrCastable,
@@ -239,13 +252,14 @@ export const constructLogEventHandler = (
                         .filter(
                           (iid: number) => !cardsToAddToBackOfHand.includes(iid)
                         )
-                        .map(instanceId => {
-                          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                          return availableActionsThatArePlayableOrCastable.find(
-                            ({instanceId: playableActionInstanceId}) =>
-                              playableActionInstanceId === instanceId
-                          )!;
-                        });
+                        .map(
+                          instanceId =>
+                            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                            availableActionsThatArePlayableOrCastable.find(
+                              ({instanceId: playableActionInstanceId}) =>
+                                playableActionInstanceId === instanceId
+                            )!
+                        );
                       const sortedHand = handToSort.sort(sortInHand);
                       console.log(
                         'after sorting',
@@ -351,7 +365,6 @@ export const constructLogEventHandler = (
                       states[k]?.gameStateMessage?.turnInfo?.step == 'Step_Draw'
                     ) {
                       // In the future we shouldn't filter by draw step and instead track all card transitions
-                      // Hmm we might not need this, I'll try putting the logic in the hand sync event
                       // const drawTransitions =
                       //   states[k]?.gameStateMessage.annotations;
                     }
@@ -360,7 +373,6 @@ export const constructLogEventHandler = (
                     gameObs.forEach((element: GameObject) => {
                       gameObjects[`${element.instanceId}`] = element;
                     });
-                    // console.log('known game objects', gameObjects)
                   }
                 }
                 const newHand = getPlayerHand(userPlayerId, clientMessages[l]);
