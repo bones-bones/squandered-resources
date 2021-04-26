@@ -27,17 +27,17 @@ export const getCastOptimizingManaUsage = (
   // Assumptions: we're playing monocolor and we only need to worry about CMC
   const manaToWorkWith = manaActions.length;
 
-  const playables: {instanceId: number; manaValue: number}[] = playActions.map(
-    ({instanceId, manaCost}) => {
+  const playables: { instanceId: number; manaValue: number }[] = playActions.map(
+    ({ instanceId, manaCost }) => {
       return {
         instanceId,
         manaValue: manaCost
-          .map(({count}) => count)
+          .map(({ count }) => count)
           .reduce((newValue, total) => newValue + total, 0),
       };
     }
   );
-  console.log(JSON.stringify(playables));
+  console.log('!!!', JSON.stringify(playables));
 
   // Exact mana usage
   for (let i = 0; i < playables.length; i++) {
@@ -55,7 +55,7 @@ export const getCastOptimizingManaUsage = (
     }
   }
   const sortedPlayablesDescending = playables.sort(
-    ({manaValue: manaValueA}, {manaValue: manaValueB}) =>
+    ({ manaValue: manaValueA }, { manaValue: manaValueB }) =>
       manaValueA - manaValueB
   );
 
@@ -67,20 +67,20 @@ export function actionsFilterByType<T extends Action>(
   type: ActionType
 ): T[] {
   // wow i'm really bad at TS. I'm sorry, austin
-  return (actions as any).filter(({actionType}: any) => actionType == type);
+  return (actions as any).filter(({ actionType }: any) => actionType == type);
 }
 
 export const getAbilityToActivateDefault: (
   choiceInfo: ActionChoiceInput
-) => InstanceAndLocation | undefined = choiceInfo => {
-  const abilitiesToUse = choiceInfo.actions.filter(entry => {
-    return genericActivatableActions[`${entry.abilityGrpId}`];
-  });
+) => InstanceAndLocation | undefined = ({ actions }) => {
+  const abilitiesToUse = actions.filter(entry =>
+    genericActivatableActions[`${entry.abilityGrpId}`]
+  );
 
   const abilitiesWithLocation = abilitiesToUse.map(entry =>
     genericActivatableActions[`${entry.abilityGrpId}`](entry)
   );
-
+  console.log('Hey i found something');
   return abilitiesWithLocation[0];
 };
 
@@ -90,6 +90,6 @@ const genericActivatableActions: {
   '136225': ability => {
     //Fabeled Passage
 
-    return {instanceId: ability.instanceId, location: FieldLocation.Land};
+    return { instanceId: ability.instanceId, location: FieldLocation.Land };
   },
 };

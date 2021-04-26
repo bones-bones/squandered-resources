@@ -1,4 +1,5 @@
 import robotjs from 'robotjs';
+import { activeHoveredCard, getActiveHoveredCard, getTick, setActiveHoveredCard } from './gameLogListener';
 import {
   ArenaWindowInfo,
   getArenaSizeAndPosition,
@@ -37,6 +38,8 @@ const PLAY_BUTTON = {
   x: 0.91,
   y: 0.93,
 };
+
+
 
 const ORDER_BLOCKERS_BUTTON = { x: 0.5, y: 0.81 };
 const buttonClickConstructor = (
@@ -91,6 +94,25 @@ export const clickInstanceInLocation = async (
   instanceAndLocation: InstanceAndLocation,
   gameObjects: GameObjects
 ): Promise<void> => {
+  console.log('I have been told to clikc something');
+  console.log(JSON.stringify(instanceAndLocation));
+  console.log(JSON.stringify(gameObjects));
+  setActiveHoveredCard(undefined);
+
+  let i = 0;
+  //let tick = getTick()
+  let localActivHoveredCard = undefined;
+  while (localActivHoveredCard != instanceAndLocation.instanceId && robotjs.getMousePos().x > 330) {
+    robotjs.moveMouseSmooth(730 - i * 9, 630);
+    await sleep(1500)
+    localActivHoveredCard = getActiveHoveredCard();
+    i++
+  }
+
+  robotjs.mouseClick();
+  robotjs.moveMouseSmooth(robotjs.getMousePos().x, robotjs.getMousePos().y - 70);
+  robotjs.mouseClick();
+
   return;
 };
 

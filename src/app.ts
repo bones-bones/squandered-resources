@@ -1,6 +1,6 @@
 import fs from 'fs';
-import {constructLogEventHandler} from './gameLogListener';
-import {clickPlayMatch, setWindowInfo} from './mouseInteractions';
+import { constructLogEventHandler } from './gameLogListener';
+import { clickPlayMatch, setWindowInfo } from './mouseInteractions';
 
 console.log('Server is up');
 
@@ -15,7 +15,7 @@ fs.promises
 
     await fs.promises.writeFile(
       '../../../Library/Logs/Wizards Of The Coast/MTGA/Player.log',
-      ''
+      '', { flag: 'w' }
     );
 
     if (mostRecentLog) {

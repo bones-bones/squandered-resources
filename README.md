@@ -25,3 +25,18 @@ the window is 1600 wide, 928 tall and at the position 96,50
 0.03375, 0.6972
 
 0.4275, 0.6972
+
+
+
+
+----
+the window is 1366 wide, 796 tall and at the position 213,50
+
+right is 730x630
+left is 330x630
+
+
+9 pixels
+
+
+585/560
